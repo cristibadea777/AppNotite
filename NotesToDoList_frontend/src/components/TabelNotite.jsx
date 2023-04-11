@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Modal, Button } from "@mui/material";
-import { Delete, Edit, Search } from "@mui/icons-material";
+import { Add, Delete, Edit, Search } from "@mui/icons-material";
 import notitaService from '../services/NotitaService'; // importare serviciu ce populeaza listaNotite
 import Pagination from '@mui/material/Pagination'; //pentru paginare tabel
 import MenuItem from '@mui/material/MenuItem';
@@ -87,9 +87,7 @@ const TabelNotite = () => {
     //functie pentru update notita 
     const handleUpdateNotita = () => {
         //salvare notita
-        console.log(notitaCurenta)
-        console.log(textNotitaNou)
-       
+
         //pregatire obiect notita updatat
         const notitaNoua = {
             ...notitaCurenta,           // Creare obiect de tip notitaCurenta
@@ -180,7 +178,6 @@ const TabelNotite = () => {
         </Modal>
     );
 
-
     //variabila de stare pt textul introdus de utilizator in campul editabil al text notita, se va seta pt notita curenta in server-side  
     const [textNotitaNou, setTextNotitaNou] = useState(null)
 
@@ -211,16 +208,42 @@ const TabelNotite = () => {
 
 
         //functie pt manipularea apasarii TAB si ENTER 
-        const handleKeyDown = (evt) => {
-            if (evt.keyCode === 9) {
-                evt.preventDefault();
-                setContent(content => content + '    '); //variabila de stare se updateaza prin functia ei de setare, nu se mai manipuleaza in DOM direct
-            }
-            else if (evt.keyCode === 13) {
-                evt.preventDefault();
-                setContent(content => content + '\n');
-            } 
-        };
+        
+            //selectionRange pentru a lua pozitia unde este cursorul, altfel se concatena la sfarsitul content-ului mereu
+
+                //variabila de stare se updateaza prin functia ei de setare, nu se mai manipuleaza in DOM direct
+                
+         
+
+
+                const handleKeyDown = (evt) => {
+                    if (evt.keyCode === 9) {
+                        //key code pt TAB este 9. atunci cand useru apasa TAB, se insereaza 4 space-uri
+                        evt.preventDefault();
+                        const selection = window.getSelection();
+                        const range = selection.getRangeAt(0);
+                        const tabNode = document.createTextNode("\u00a0\u00a0\u00a0\u00a0")
+                        range.insertNode(tabNode);
+                        range.setStartAfter(tabNode);
+                        range.setEndAfter(tabNode);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    }
+                    else if (evt.keyCode === 13) {
+                        //key code pt ENTER este 13. atunci cand useru apasa ENTER, se insereaza '\n' 
+                        //whiteSpace: 'pre-wrap' la table cell -- altfel nu merge
+                        evt.preventDefault();
+                        const selection = window.getSelection()
+                        const range = selection.getRangeAt(0)
+                        const textNode = document.createTextNode("\n")
+                        range.insertNode(textNode)
+                        range.setStartAfter(textNode)
+                        range.setEndAfter(textNode)
+                        selection.removeAllRanges()
+                        selection.addRange(range)
+                    }
+                };
+
         
         //hook react cand se schimba content pt a gestiona TAB si ENTER
         //ruleaza de fiecare data cand se schimba contentul
@@ -228,17 +251,9 @@ const TabelNotite = () => {
         //    console.log(content)
         //}, [content]);
 
-
-        const handleOnFocus = () =>{
-            console.log(propNotita)
-            //setat aici variabila cum ca e pe focus
-            //si daca e pe focus, cand se da click pe butonu <Edit> sa se ia cu hook notita curenta etc sau sa apara modal salvare
-        }
-
-
         return (
             <TableCell
-                colSpan={5}
+                colSpan={6}
                 style={{
                     color: 'white',
                     paddingLeft: '7vh',
@@ -248,18 +263,18 @@ const TabelNotite = () => {
                     whiteSpace: 'pre-wrap'
                 }}
                 onBlur={handleBlurTableCell}
-                onFocus={handleOnFocus}
             >
                 <ContentEditable
                     onChange={onContentChange}
                     html={content}
-                    tagName="div"             //ContentEditable va fi un div in interiorul table cell care e un td
+                    tagName="p"             //ContentEditable va fi un div in interiorul table cell care e un td
                     style={{ outline: "none" }}
                     onKeyDown={handleKeyDown}
                 />
             </TableCell>
         )
     }
+
     
     return (
         <TableContainer component={Paper} style={{ backgroundColor: '#1e1e1e' }}>
@@ -309,7 +324,9 @@ const TabelNotite = () => {
                         <TableCell style={{ color: 'cyan' }}><h4>Titlu</h4></TableCell>
                         <TableCell style={{ color: 'cyan' }}><h4>Dată scriere</h4></TableCell>
                         <TableCell style={{ color: 'cyan' }}><h4>Dată modificare</h4></TableCell>
-                        <TableCell colSpan={2}></TableCell>
+                        <TableCell> <IconButton> <Add style={{ color: "cyan" }} /></IconButton> </TableCell>
+                        <TableCell> <IconButton> <Edit style={{ color: "cyan" }} /></IconButton> </TableCell>
+                        <TableCell> <IconButton> <Delete style={{ color: "cyan" }} /></IconButton> </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -319,8 +336,7 @@ const TabelNotite = () => {
                                 <TableCell style={{ color: 'white' }}> <h4>{notita.titlu}</h4>          </TableCell>
                                 <TableCell style={{ color: 'white' }}> {notita.dataScriere}             </TableCell>
                                 <TableCell style={{ color: 'white' }}> {notita.dataModificare}          </TableCell>
-                                <TableCell> <IconButton> <Edit style={{ color: "cyan" }} /></IconButton> </TableCell>
-                                <TableCell> <IconButton> <Delete style={{ color: "cyan" }} /></IconButton> </TableCell>
+                                <TableCell colSpan={3}></TableCell>
                             </TableRow>
                             {openRowIndex === index && (
                                 <TableRow>
