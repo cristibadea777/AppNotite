@@ -209,42 +209,24 @@ const TabelNotite = () => {
             setContent(sanitizeHtml(evt.currentTarget.innerHTML, sanitizeConf))            
         }, [])
 
-        //ruleaza de fiecare data cand se schimba contentul
-        useEffect(() => {
-            
-        }, [content]);
 
-        //pentru eveniment apasare TAB sau enter
+        //functie pt manipularea apasarii TAB si ENTER 
         const handleKeyDown = (evt) => {
             if (evt.keyCode === 9) {
-                //key code pt TAB este 9. atunci cand useru apasa TAB, se insereaza 4 space-uri
                 evt.preventDefault();
-                const selection = window.getSelection();
-                const range = selection.getRangeAt(0);
-                const tabNode = document.createTextNode("\u00a0\u00a0\u00a0\u00a0")
-                range.insertNode(tabNode);
-                range.setStartAfter(tabNode);
-                range.setEndAfter(tabNode);
-                selection.removeAllRanges();
-                selection.addRange(range);
+                setContent(content => content + '    '); //variabila de stare se updateaza prin functia ei de setare, nu se mai manipuleaza in DOM direct
             }
             else if (evt.keyCode === 13) {
-                //key code pt ENTER este 13. atunci cand useru apasa ENTER, se insereaza '\n' 
-                //whiteSpace: 'pre-wrap' la table cell -- altfel nu merge
                 evt.preventDefault();
-                const selection = window.getSelection()
-                const range = selection.getRangeAt(0)
-                const textNode = document.createTextNode("\n")
-                range.insertNode(textNode)
-                range.setStartAfter(textNode)
-                range.setEndAfter(textNode)
-                selection.removeAllRanges()
-                selection.addRange(range)
-            }
+                setContent(content => content + '\n');
+            } 
         };
-
-
-
+        
+        //hook react cand se schimba content pt a gestiona TAB si ENTER
+        //ruleaza de fiecare data cand se schimba contentul
+        //useEffect(() => {
+        //    console.log(content)
+        //}, [content]);
 
 
         const handleOnFocus = () =>{
@@ -252,8 +234,6 @@ const TabelNotite = () => {
             //setat aici variabila cum ca e pe focus
             //si daca e pe focus, cand se da click pe butonu <Edit> sa se ia cu hook notita curenta etc sau sa apara modal salvare
         }
-
-
 
 
         return (
@@ -275,7 +255,7 @@ const TabelNotite = () => {
                     html={content}
                     tagName="div"             //ContentEditable va fi un div in interiorul table cell care e un td
                     style={{ outline: "none" }}
-                    onKeyDown={handleKeyDown} //Pentru tab si carriage return       
+                    onKeyDown={handleKeyDown}
                 />
             </TableCell>
         )
