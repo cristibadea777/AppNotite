@@ -7,9 +7,15 @@ function App() {
   return (
     <div className="App">
       <Appbar/>
-      <div style={{display: 'flex', justifyContent: 'center'}}>
-        <div style={{width: '75%'}}>
+      <div style={{display: 'flex'}}>
+        <div style={{width: '25%'}}>
+          {}
+        </div>
+        <div style={{width: '50%'}}>
           <TabelNotite />
+        </div>
+        <div style={{width: '25%'}}>
+          {}
         </div>
       </div>
     </div>

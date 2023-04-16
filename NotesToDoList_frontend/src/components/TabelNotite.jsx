@@ -209,40 +209,33 @@ const TabelNotite = () => {
 
         //functie pt manipularea apasarii TAB si ENTER 
         
-            //selectionRange pentru a lua pozitia unde este cursorul, altfel se concatena la sfarsitul content-ului mereu
-
-                //variabila de stare se updateaza prin functia ei de setare, nu se mai manipuleaza in DOM direct
-                
-         
-
-
-                const handleKeyDown = (evt) => {
-                    if (evt.keyCode === 9) {
-                        //key code pt TAB este 9. atunci cand useru apasa TAB, se insereaza 4 space-uri
-                        evt.preventDefault();
-                        const selection = window.getSelection();
-                        const range = selection.getRangeAt(0);
-                        const tabNode = document.createTextNode("\u00a0\u00a0\u00a0\u00a0")
-                        range.insertNode(tabNode);
-                        range.setStartAfter(tabNode);
-                        range.setEndAfter(tabNode);
-                        selection.removeAllRanges();
-                        selection.addRange(range);
-                    }
-                    else if (evt.keyCode === 13) {
-                        //key code pt ENTER este 13. atunci cand useru apasa ENTER, se insereaza '\n' 
-                        //whiteSpace: 'pre-wrap' la table cell -- altfel nu merge
-                        evt.preventDefault();
-                        const selection = window.getSelection()
-                        const range = selection.getRangeAt(0)
-                        const textNode = document.createTextNode("\n")
-                        range.insertNode(textNode)
-                        range.setStartAfter(textNode)
-                        range.setEndAfter(textNode)
-                        selection.removeAllRanges()
-                        selection.addRange(range)
-                    }
-                };
+        const handleKeyDown = (evt) => {
+            if (evt.keyCode === 9) {
+                //key code pt TAB este 9. atunci cand useru apasa TAB, se insereaza 4 space-uri
+                evt.preventDefault();
+                const selection = window.getSelection();
+                const range = selection.getRangeAt(0);
+                const tabNode = document.createTextNode("\u00a0\u00a0\u00a0\u00a0")
+                range.insertNode(tabNode);
+                range.setStartAfter(tabNode);
+                range.setEndAfter(tabNode);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+            else if (evt.keyCode === 13) {
+                //key code pt ENTER este 13. atunci cand useru apasa ENTER, se insereaza '\n' 
+                //whiteSpace: 'pre-wrap' la table cell -- altfel nu merge
+                evt.preventDefault();
+                const selection = window.getSelection()
+                const range = selection.getRangeAt(0)
+                const textNode = document.createTextNode("\n")
+                range.insertNode(textNode)
+                range.setStartAfter(textNode)
+                range.setEndAfter(textNode)
+                selection.removeAllRanges()
+                selection.addRange(range)
+            }
+        };
 
         
         //hook react cand se schimba content pt a gestiona TAB si ENTER
