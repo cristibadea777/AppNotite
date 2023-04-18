@@ -7,8 +7,7 @@ class NotiteService {
 
   async getNotite() {
     //GET REQUEST 
-    const cacheBuster = new Date().getTime(); // Generate a random number
-    return axios.get(`http://localhost:8080/notite?cache=${cacheBuster}`);
+    return axios.get(`http://localhost:8080/notite`);
   }
 
   async updateNotita(notitaNoua){
