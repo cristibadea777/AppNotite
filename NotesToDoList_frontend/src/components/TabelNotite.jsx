@@ -72,8 +72,8 @@ const handleUpdateNotita = () => {
         //Pornire hook useEffect ce este legat de variabila de stare -- pt update lista notite
         setUpdateFlag(!updateFlag)
 
-        //Componenta (LinieEditabilaTextNotita) se va re-randa atunci cand se schimba starea notitaCurenta
-        //asta pentru ca content-ul LinieEditabilaTextNotita depinde de starea notitaCurenta (const [content, setContent] = useState(notitaCurenta.textNotita))
+        //Componenta (CampTextNotita) se va re-randa atunci cand se schimba starea notitaCurenta
+        //asta pentru ca content-ul CampTextNotita depinde de starea notitaCurenta (const [content, setContent] = useState(notitaCurenta.textNotita))
         //nu putem face cu setNotitaCurenta(notitaCurenta) pentru ca e aceeasi referinta a obiectului, deci starea nu se va schimba
         //notitaNoua este acelas obiect ca notitaCurenta dar are alta referinta
         setNotitaCurenta(notitaNoua)
@@ -157,8 +157,9 @@ const ModalTextNotita = (
 //variabila de stare pt textul introdus de utilizator in campul editabil al text notita, se va seta pt notita curenta in server-side  
 const [textNotitaNou, setTextNotitaNou] = useState(null)
 
-//pentru o linie de tabel editabila
-const LinieEditabilaTextNotita = ( ) => {
+//componenta care va afisa textul notitei, sub forma de <div>
+//se re-randeaza automat cand se schimba starea notitaCurenta, pentru ca variabila interna de stare 'content' depinde de ea 
+const CampTextNotita = ( ) => {
 
     const [content, setContent] = useState(notitaCurenta.textNotita)
 
@@ -209,23 +210,23 @@ const LinieEditabilaTextNotita = ( ) => {
 
     //componenta returnata sub forma de div cu un element interior de tip ContentEditable
     return (
-        <div
-            style={{
-                color: 'white',
-                paddingLeft: '7vh',
-                overflowWrap: 'break-word',
-                wordWrap: 'break-word',
-                wordBreak: 'break-word',
-                whiteSpace: 'pre-wrap'
-            }}
-            onBlur={handleBlur}
-        >
+        //impachetat intr-un div obisnuit, pt ca ContentEditable al React nu are prop-ul de onBlur 
+        <div onBlur={handleBlur}>
             <ContentEditable
+                html={content}            //inner html
                 onChange={onContentChange}
-                html={content}
-                tagName="p"             //ContentEditable va fi un div in interiorul table cell care e un td
-                style={{ outline: "none" }}
                 onKeyDown={handleKeyDown}
+                tagName="div"             //ContentEditable va fi sub forma de div
+                style={{ 
+                    color: 'white',
+                    overflowWrap: 'break-word',
+                    wordWrap: 'break-word',
+                    wordBreak: 'break-word',
+                    whiteSpace: 'pre-wrap',
+                    border: '1px solid yellow',
+                    height: '50vh',
+                    overflow: 'auto'
+                }}
             />
         </div>
     )
@@ -268,9 +269,7 @@ return (
         </div>
 
         {notitaCurenta ? (
-            <div>
-                <LinieEditabilaTextNotita/>
-            </div>
+            <CampTextNotita/>
         ) : null}
 
     </div>
