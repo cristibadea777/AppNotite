@@ -1,3 +1,16 @@
 body{
   background-color: #232B2B;
+  max-height: 100vh;
+  overflow: hidden; /* ma scapa sa calculez eu sa scad cat vh are appbar si cat tabel notite sa le dau pana in 100...ca sa scap de scrollbar pagina */
+}
+
+/* customizare scrollbar componente pt ca nu imi place cea a browserului*/
+::-webkit-scrollbar {
+  width: 1vw; 
+  padding: 1vh;
+  background-color: #1e1e1e /* culoare banda */
+}
+::-webkit-scrollbar-thumb {
+  background-color:  #282424; /* culoare scroll thumb */
+  border-radius: 0.7vw; /* rotunjire borduri */
 }

@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="App">
       <Appbar/>
-      <TabelNotite />
+      <TabelNotite/>
     </div>
   );
 }

@@ -1,13 +1,19 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Modal, Button } from "@mui/material";
-import { Add, Delete, Edit, Search } from "@mui/icons-material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Modal, Button } from "@mui/material";
+import { Add, Archive, Delete, Edit, Search } from "@mui/icons-material";
 import notitaService from '../services/NotitaService'; // importare serviciu ce populeaza listaNotite
 import sanitizeHtml from "sanitize-html"
 import ContentEditable from 'react-contenteditable';
 import { Box } from "@mui/system";
 
-
+const butoane1 = {
+    backgroundColor: '#1e1e1e', 
+    color: 'cyan', 
+    border: '1px solid black', 
+    fontSize: '2vh', 
+    marginLeft: '3vh',
+  }
 
 const TabelNotite = () => {
 
@@ -34,8 +40,6 @@ useEffect(() => {
     });
 }, [updateFlag]
 )
-
-
 
 //functie folosita la setarea notitei curente pt afisarea notitei in div
 //se activeaza atunci cand se da click pe o linie a tabelului, evenimentul este definit in tabel cu onClick pt tableRow
@@ -218,13 +222,17 @@ const CampTextNotita = ( ) => {
                 onKeyDown={handleKeyDown}
                 tagName="div"             //ContentEditable va fi sub forma de div
                 style={{ 
+                    marginLeft: '3vh',
+                    marginRight: '0.5vh',
                     color: 'white',
                     overflowWrap: 'break-word',
                     wordWrap: 'break-word',
                     wordBreak: 'break-word',
                     whiteSpace: 'pre-wrap',
-                    border: '1px solid yellow',
-                    height: '50vh',
+                    border: '1px solid #1e1e1e',
+                    padding: '1em',
+                    textAlign: 'justify',
+                    height: '77vh',
                     overflow: 'auto'
                 }}
             />
@@ -234,18 +242,21 @@ const CampTextNotita = ( ) => {
 
 
 return (
-    <div style={{display: 'flex', height: '100vh'}}>
-        <div style={{width: '25%', overflow: 'scroll'}}>
-            <TableContainer component={Paper} style={{ backgroundColor: '#1e1e1e' }}>
-                <div style={{ display: 'flex', alignItems: 'center', padding: 5, justifyContent: "space-between" }}>
-                    <div>
-                        <IconButton> <Search style={{ color: "cyan" }} /></IconButton>
-                    </div>
-                </div>
+    <div style={{display: 'flex'}}>
+
+        <div style={{width: '30%'}}>
+            <TableContainer component={Paper} style={{ backgroundColor: '#1e1e1e', maxHeight: '100vh', overflow: 'auto' }}>
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell style={{ color: 'cyan' }}><h2>Listă</h2></TableCell>
+                            <TableCell style={{ color: 'cyan' }}>
+                                <Button variant="contained" sx={{...butoane1}}><Search style={{ color: "cyan" }} /></Button>
+                            </TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell style={{ color: 'cyan' }}>
+                                <Button variant="contained" sx={{...butoane1}}><Add style={{ color: "cyan" }} /></Button>
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -268,9 +279,23 @@ return (
             </TableContainer>
         </div>
 
-        {notitaCurenta ? (
-            <CampTextNotita/>
-        ) : null}
+        <div style={{width: '70%'}}>
+
+            <div style={{display: 'flex', justifyContent: 'right', alignItems: 'center', height:'10vh', marginLeft: '3vh', marginRight: '0.5vh'}}>
+                
+                <Button variant="contained" sx={{...butoane1}}><Edit style={{ color: "cyan" }} /></Button>
+                <Button variant="contained" sx={{...butoane1}}><Archive style={{ color: "cyan" }} /></Button>
+                <Button variant="contained" sx={{...butoane1}}><Delete style={{ color: "cyan" }} /></Button>
+
+            </div>
+
+            <div>
+                {notitaCurenta ? (
+                    <CampTextNotita/>
+                ) : null}
+            </div>
+
+        </div>
 
     </div>
 )
