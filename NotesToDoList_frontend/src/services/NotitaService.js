@@ -15,7 +15,6 @@ class NotiteService {
     axios.put(`http://localhost:8080/notite`, notitaNoua);  
   }
 
-
 }
 
 const notiteService = new NotiteService();

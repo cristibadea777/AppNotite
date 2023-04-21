@@ -1,27 +1,31 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Modal, Button } from "@mui/material";
-import { Add, Archive, Delete, Edit, Search } from "@mui/icons-material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from "@mui/material";
+import { Add, Archive, Delete, Edit, Search, Settings } from "@mui/icons-material";
 import notitaService from '../services/NotitaService'; // importare serviciu ce populeaza listaNotite
 import sanitizeHtml from "sanitize-html"
 import ContentEditable from 'react-contenteditable';
-import { Box } from "@mui/system";
+//modale ~~~~~~~~~~~~~~~~~
+import ModalCreareNotita from  '../components/modals/ModalCreareNotita';
+import ModalEditareNotita from '../components/modals/ModalEditareNotita';
 
-const butoane1 = {
-    backgroundColor: '#1e1e1e', 
-    color: 'cyan', 
-    border: '1px solid black', 
-    fontSize: '2vh', 
-    marginLeft: '3vh',
-  }
+const butoane1 = { backgroundColor: '#1e1e1e', color: 'cyan', border: '1px solid black', fontSize: '2vh',  marginLeft: '3vh' }
+
 
 const TabelNotite = () => {
 
 //initializare lista notita ca fiind o lista goala utilizand hook-ul useState si populare prin apelarea serviciului
 const [listaNotite, setListaNotite] = useState([])
 
-//variabila de stare ce va declansa hook-ul useEffect pt a updata listaNotite
+//variabila de stare ce va declansa hook-ul useEffect pt a updata listaNotite 
+//fiecare flag va declansa o anumita functie de creare/editare/stergere (exemplu - updateFlag declanseaza functia de update a modalului ModalEditareNotita)  
+//--- pentru Editare
 const [updateFlag, setUpdateFlag] = useState(false);
+//--- pentru Stergere
+//const [deleteFlag, setDeleteFlag] = useState(false);
+//--- pentru Creare
+//const [createFlag, setCreateFlag] = useState(false);
+
 
 //notita curenta (cu ea lucram pt afisare text notita, PUT, DELETE, etc)
 const [notitaCurenta, setNotitaCurenta] = useState(null)
@@ -46,134 +50,41 @@ useEffect(() => {
 
 const handleRowClick = (index) => {
     setNotitaCurenta(listaNotite[index])
-};
-
-const [isModalTextNotiteOpen, setIsModalTextNotiteOpen] = useState(false); //isModalOpen este variabila de stare, setIsModalOpen este functia ce schimba starea 
-
-//functie schimbare stare modal text notite in true
-const handleOpenModalTextNotite = () => {
-    setIsModalTextNotiteOpen(true); //seteaza variabila de stare isModalTextNotiteOpen ca fiind true. astfel modalul se va deschide 
-};
-
-//functie schimbare stare modal text notite in false atunci cand se apasa butonul Închide
-const handleCloseModalTextNotite = () => {
-    setIsModalTextNotiteOpen(false);
+    setContent(listaNotite[index].textNotita)
 }
 
-//functie pentru update notita 
-const handleUpdateNotita = () => {
-    //salvare notita
+//MODALE
+//modal creare
+const [isOpenModalCreareNotita, setIsOpenModalCreareNotita] = useState(false);
+const ToggleModalCreareNotita = () => setIsOpenModalCreareNotita( ! isOpenModalCreareNotita);
+//modal editare
+const [isOpenModalEditareNotita, setIsOpenModalEditareNotita] = useState(false);
+const ToggleModalEditareNotita = () => setIsOpenModalEditareNotita( ! isOpenModalEditareNotita);
+//MODALE
 
-    //pregatire obiect notita updatat
-    const notitaNoua = {
-        ...notitaCurenta,           // Creare obiect de tip notitaCurenta
-        textNotita: textNotitaNou   // Modificare field textNotita cu valoarea noua stocata in textNotitaNou
+const [content, setContent] = useState(null)
+
+useEffect(() => {
+    const sanitizeConf = {
+        allowedTags: ["b", "i", "a", "p"],
+        allowedAttributes: { a: ["href"] }
     };
-
-    //update notita
-    notitaService.updateNotita(notitaNoua)
-    .then(() => {
-        //Pornire hook useEffect ce este legat de variabila de stare -- pt update lista notite
-        setUpdateFlag(!updateFlag)
-
-        //Componenta (CampTextNotita) se va re-randa atunci cand se schimba starea notitaCurenta
-        //asta pentru ca content-ul CampTextNotita depinde de starea notitaCurenta (const [content, setContent] = useState(notitaCurenta.textNotita))
-        //nu putem face cu setNotitaCurenta(notitaCurenta) pentru ca e aceeasi referinta a obiectului, deci starea nu se va schimba
-        //notitaNoua este acelas obiect ca notitaCurenta dar are alta referinta
-        setNotitaCurenta(notitaNoua)
-
-        handleCloseModalTextNotite()
-    })
-    .catch(error => {
-        console.error(error);
-    });
-
-};
+}, [content]
+)
 
 
-//Content pentru Modalul Text Notita
-const ContentModalTextNotita = (
-    <Box
-        sx={{
-            bgcolor: '#282424',
-            color: 'white',
-            padding: 3,
-            display: 'flex',
-            justifyContent: 'center',
-            minHeight: '20vh',
-            minWidth: '50vh',
-
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)'
-
-        }}
-    >
-        <Box>
-            <h2>Salvezi modificările textului?</h2>
-        </Box>
-
-        <Box
-            sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: "80%",
-                position: "absolute",
-                padding: 3,
-                bottom: 0
-            }}
-        >
-            <Button
-                variant="contained"
-                onClick={handleCloseModalTextNotite}
-            >
-                Închide
-            </Button>
-
-            <Button
-                variant="contained"
-                sx={{
-                    backgroundColor: "red",
-                    "&:hover": {
-                        backgroundColor: "#FF4500"
-                    }
-                }}
-                onClick={handleUpdateNotita}
-            >
-                Salvează
-            </Button>
-        </Box>
-
-    </Box>
-);
-
-//Modalul propriu-zis (componenta modal caruia i se adauga contentent-ul, definit mai sus)
-const ModalTextNotita = (
-    <Modal
-        aria-labelledby="modal-text-notita"
-        open={isModalTextNotiteOpen}
-    >
-        {ContentModalTextNotita}
-    </Modal>
-);
+//functie ce va actiona atunci cand dam click pe butonul de Edit (dupa ce se selecteaza o notita, pt a avea variabila notita curenta ne-nulla)
+const handleOpenModalEditare = () => {            
+    setTextNotitaNou(content)
+    ToggleModalEditareNotita() //deschidere modal prin schimbare variabila de stare, din starea initiala false, in true cu functia de toggle ce inverseaza valoarea
+}
 
 //variabila de stare pt textul introdus de utilizator in campul editabil al text notita, se va seta pt notita curenta in server-side  
 const [textNotitaNou, setTextNotitaNou] = useState(null)
 
 //componenta care va afisa textul notitei, sub forma de <div>
 //se re-randeaza automat cand se schimba starea notitaCurenta, pentru ca variabila interna de stare 'content' depinde de ea 
-const CampTextNotita = ( ) => {
-
-    const [content, setContent] = useState(notitaCurenta.textNotita)
-
-    const onContentChange = React.useCallback(evt => {
-        const sanitizeConf = {
-            allowedTags: ["b", "i", "a", "p"],
-            allowedAttributes: { a: ["href"] }
-        };
-        setContent(sanitizeHtml(evt.currentTarget.innerHTML, sanitizeConf))    
-    }, [])
+const CampTextNotita = ( {content} ) => {
 
     //functie pt manipularea apasarii TAB si ENTER     
     const handleKeyDown = (evt) => {
@@ -204,39 +115,18 @@ const CampTextNotita = ( ) => {
         }   
     }
 
-    //functie ce va actiona in onBlur daca dam focus pe textul celulei tabelului
-    const handleBlur = () => {            
-        setTextNotitaNou(content)
-        if(notitaCurenta.textNotita !== content){
-            handleOpenModalTextNotite() //functie de deschidere modal notite
-        }
-    }
-
     //componenta returnata sub forma de div cu un element interior de tip ContentEditable
     return (
-        //impachetat intr-un div obisnuit, pt ca ContentEditable al React nu are prop-ul de onBlur 
-        <div onBlur={handleBlur}>
-            <ContentEditable
-                html={content}            //inner html
-                onChange={onContentChange}
-                onKeyDown={handleKeyDown}
-                tagName="div"             //ContentEditable va fi sub forma de div
-                style={{ 
-                    marginLeft: '3vh',
-                    marginRight: '0.5vh',
-                    color: 'white',
-                    overflowWrap: 'break-word',
-                    wordWrap: 'break-word',
-                    wordBreak: 'break-word',
-                    whiteSpace: 'pre-wrap',
-                    border: '1px solid #1e1e1e',
-                    padding: '1em',
-                    textAlign: 'justify',
-                    height: '77vh',
-                    overflow: 'auto'
-                }}
-            />
-        </div>
+        <ContentEditable 
+            html={content}//inner html
+            onKeyDown={handleKeyDown}
+            tagName="div"             //ContentEditable va fi sub forma de div
+            style={{ 
+                marginLeft: '2vh', marginRight: '0.5vh', color: 'white', overflowWrap: 'break-word', wordWrap: 'break-word',
+                wordBreak: 'break-word', whiteSpace: 'pre-wrap', border: '1px solid #1e1e1e', padding: '1em', textAlign: 'justify',
+                height: '77vh', overflow: 'auto'
+            }}
+        />
     )
 }
 
@@ -244,30 +134,36 @@ const CampTextNotita = ( ) => {
 return (
     <div style={{display: 'flex'}}>
 
-        <div style={{width: '30%'}}>
-            <TableContainer component={Paper} style={{ backgroundColor: '#1e1e1e', maxHeight: '100vh', overflow: 'auto' }}>
+        <div style={{width: '30vw'}}>
+
+            <div style={{height: '10vh', display:'flex', alignItems: 'center', justifyContent:'left', flexWrap: 'wrap', marginBottom: '0.5vh'}}>
+                <Button variant="contained" style={{...butoane1, marginLeft: '0.5vh'}}><Search style={{ color: 'white' }} /></Button>
+                <Button variant="contained" onClick ={ () => ToggleModalCreareNotita() } style={{...butoane1, marginLeft: '0.5vh'}}><Add style={{ color: 'white' }} /></Button>
+            </div>
+
+            <TableContainer component={Paper} style={{ backgroundColor: '#1e1e1e', height: '81vh', overflowY: 'auto', overflowX: 'hidden', whiteSpace: 'nowrap', marginLeft: '0.5vh',}}>
                 <Table>
                     <TableHead>
-                        <TableRow>
-                            <TableCell style={{ color: 'cyan' }}>
-                                <Button variant="contained" sx={{...butoane1}}><Search style={{ color: "cyan" }} /></Button>
-                            </TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell style={{ color: 'cyan' }}>
-                                <Button variant="contained" sx={{...butoane1}}><Add style={{ color: "cyan" }} /></Button>
-                            </TableCell>
-                        </TableRow>
                     </TableHead>
                     <TableBody>
                         {listaNotite.map((notita, index) => (
                             <React.Fragment key={notita.notitaId}>
-                                <TableRow onClick={() => handleRowClick(index)}>
-                                    <TableCell style={{ color: 'white' }}>
+                                <TableRow onClick={ () => handleRowClick(index) }>
+                                    <TableCell style={{ color: 'white', border: 'none', overflow: 'hidden',  }}>
                                         <div style={{display: 'flex', flexDirection: 'column'}}>
-                                            <h3>{notita.titlu}</h3> 
-                                            <small>Creat:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{notita.dataScriere}</small>    
-                                            <small>Modificat:&nbsp;{notita.dataModificare}</small>   
+                                            <div>
+                                                <h3>{notita.titlu}</h3>
+                                            </div> 
+                                            <div style={{width: '100%'}}>
+                                                <div style={{display:'flex', justifyContent:'left', flexWrap: 'wrap'}}>
+                                                    <small style={{marginRight:'2.7vh'}}>Creat:</small> 
+                                                    <small> {notita.dataScriere} </small>
+                                                </div>
+                                                <div style={{display:'flex', justifyContent:'left', flexWrap: 'wrap'}}>
+                                                    <small style={{marginRight:'0.5vh'}}>Modificat:</small>
+                                                    <small> {notita.dataModificare} </small>
+                                                </div> 
+                                            </div>
                                         </div>
                                     </TableCell>
                                 </TableRow>
@@ -275,27 +171,40 @@ return (
                         ))}
                     </TableBody>
                 </Table>
-                {ModalTextNotita}
+            
+                <ModalEditareNotita
+                    show={isOpenModalEditareNotita} close={ToggleModalEditareNotita} 
+                    notitaCurenta={notitaCurenta}   setNotitaCurenta={setNotitaCurenta} 
+                    textNotitaNou={textNotitaNou}   notitaService={notitaService} 
+                    updateFlag={updateFlag}         setUpdateFlag={setUpdateFlag}
+                />
+            
+                <ModalCreareNotita  
+                    show={isOpenModalCreareNotita}  close={ToggleModalCreareNotita} 
+                />
+            
             </TableContainer>
         </div>
+        
+        <>
+        {
+            notitaCurenta ? (
+                <div style={{width: '70vw'}}>
 
-        <div style={{width: '70%'}}>
+                    <div style={{display: 'flex', justifyContent: 'right', alignItems: 'center', height:'10vh', marginLeft: '3vh', marginRight: '0.5vh', marginBottom: '0.5vh', flexWrap: 'wrap'}}>
+                        <Button onClick={ () => handleOpenModalEditare() } variant="contained" style={{...butoane1}}><Edit     style={{ color: "blue"   }} /></Button>
+                        <Button variant="contained" style={{...butoane1}}><Archive  style={{ color: "yellow" }} /></Button>
+                        <Button variant="contained" style={{...butoane1}}><Delete   style={{ color: "red"    }} /></Button>
+                        <Button variant="contained" style={{...butoane1}}><Settings style={{ color: "white"  }} /></Button>
+                    </div>
 
-            <div style={{display: 'flex', justifyContent: 'right', alignItems: 'center', height:'10vh', marginLeft: '3vh', marginRight: '0.5vh'}}>
-                
-                <Button variant="contained" sx={{...butoane1}}><Edit style={{ color: "cyan" }} /></Button>
-                <Button variant="contained" sx={{...butoane1}}><Archive style={{ color: "cyan" }} /></Button>
-                <Button variant="contained" sx={{...butoane1}}><Delete style={{ color: "cyan" }} /></Button>
-
-            </div>
-
-            <div>
-                {notitaCurenta ? (
-                    <CampTextNotita/>
-                ) : null}
-            </div>
-
-        </div>
+                    <div>
+                        <CampTextNotita content={content}/>
+                    </div>
+                </div>
+            ) : null
+        }
+        </>
 
     </div>
 )
