@@ -9,8 +9,9 @@ import ContentEditable from 'react-contenteditable';
 import ModalCreareNotita from  '../components/modals/ModalCreareNotita';
 import ModalEditareNotita from '../components/modals/ModalEditareNotita';
 
-const butoane1 = { backgroundColor: '#1e1e1e', color: 'cyan', border: '1px solid black', fontSize: '2vh',  marginLeft: '3vh' }
+import { useRef } from "react";
 
+const butoane1 = { backgroundColor: '#1e1e1e', color: 'cyan', border: '1px solid black', fontSize: '2vh',  marginLeft: '3vh' }
 
 const TabelNotite = () => {
 
@@ -64,61 +65,66 @@ const ToggleModalEditareNotita = () => setIsOpenModalEditareNotita( ! isOpenModa
 
 const [content, setContent] = useState(null)
 
-useEffect(() => {
-    const sanitizeConf = {
-        allowedTags: ["b", "i", "a", "p"],
-        allowedAttributes: { a: ["href"] }
-    };
-}, [content]
-)
-
 
 //functie ce va actiona atunci cand dam click pe butonul de Edit (dupa ce se selecteaza o notita, pt a avea variabila notita curenta ne-nulla)
 const handleOpenModalEditare = () => {            
     setTextNotitaNou(content)
     ToggleModalEditareNotita() //deschidere modal prin schimbare variabila de stare, din starea initiala false, in true cu functia de toggle ce inverseaza valoarea
 }
-
 //variabila de stare pt textul introdus de utilizator in campul editabil al text notita, se va seta pt notita curenta in server-side  
 const [textNotitaNou, setTextNotitaNou] = useState(null)
+
+
 
 //componenta care va afisa textul notitei, sub forma de <div>
 //se re-randeaza automat cand se schimba starea notitaCurenta, pentru ca variabila interna de stare 'content' depinde de ea 
 const CampTextNotita = ( {content} ) => {
 
+    const sanitizeConf = {
+        allowedTags: ["b", "i", "a", "p"],
+        allowedAttributes: { a: ["href"] }
+    };
+
+    const refContentEditable = useRef()
+
+    const handleBlur = () => {
+      const html = refContentEditable.current.innerHTML;
+      console.log({ html });
+      setContent(sanitizeHtml(html, sanitizeConf))
+    };
+
     //functie pt manipularea apasarii TAB si ENTER     
     const handleKeyDown = (evt) => {
+        const selection = window.getSelection()
+        const range = selection.getRangeAt(0)
         if (evt.keyCode === 9) {
-            //key code pt TAB este 9. atunci cand useru apasa TAB, se insereaza 4 space-uri
             evt.preventDefault();
-            const selection = window.getSelection();
-            const range = selection.getRangeAt(0);
+            //key code pt TAB este 9. atunci cand useru apasa TAB, se insereaza 4 space-uri
             const tabNode = document.createTextNode("\u00a0\u00a0\u00a0\u00a0")
             range.insertNode(tabNode);
             range.setStartAfter(tabNode);
             range.setEndAfter(tabNode);
-            selection.removeAllRanges();
-            selection.addRange(range);
         }
         else if (evt.keyCode === 13) {
+            evt.preventDefault();
             //key code pt ENTER este 13. atunci cand useru apasa ENTER, se insereaza '\n' 
             //whiteSpace: 'pre-wrap' la table cell -- altfel nu merge
-            evt.preventDefault();
-            const selection = window.getSelection()
-            const range = selection.getRangeAt(0)
             const textNode = document.createTextNode("\n")
             range.insertNode(textNode)
             range.setStartAfter(textNode)
             range.setEndAfter(textNode)
-            selection.removeAllRanges()
-            selection.addRange(range)
         }   
+        selection.removeAllRanges();
+        selection.addRange(range);
     }
 
     //componenta returnata sub forma de div cu un element interior de tip ContentEditable
     return (
         <ContentEditable 
+            innerRef={refContentEditable}
+            //setam ref-ul utilizand prop-ul innerRef. innerRef seteaza referinta pe elementul DOM, si putem lua innerHTML-ul lui
             html={content}//inner html
+            onBlur={handleBlur}
             onKeyDown={handleKeyDown}
             tagName="div"             //ContentEditable va fi sub forma de div
             style={{ 
@@ -182,7 +188,7 @@ return (
                 <ModalCreareNotita  
                     show={isOpenModalCreareNotita}  close={ToggleModalCreareNotita} 
                 />
-            
+                        
             </TableContainer>
         </div>
         
