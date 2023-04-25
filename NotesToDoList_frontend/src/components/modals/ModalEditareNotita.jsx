@@ -13,7 +13,7 @@ const ModalEditareNotita = ( {show, close, notitaCurenta, setNotitaCurenta, noti
     const handleCloseModal = () => {
         setContent(notitaCurenta.textNotita)
         setContentTitlu(notitaCurenta.titlu)
-        close()  //---close sa nu fie pus aici, ci sa se seteze toggle on pt modalu de confirmare ... si daca se confirma, restu de mai sus sa se puna in handle confirm Close modal
+        close()  
     }
 
     //functie pentru update notita 
@@ -82,6 +82,10 @@ const ModalEditareNotita = ( {show, close, notitaCurenta, setNotitaCurenta, noti
 
         </Box>
     )
+
+
+
+
 
     return(
         //DE SCOS ASTA DE AICI, LASAT DOAR UN DIV NEEDITABIL 
