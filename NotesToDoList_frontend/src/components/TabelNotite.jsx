@@ -1,15 +1,12 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from "@mui/material";
-import { Add, Archive, Delete, Edit, Search, Settings } from "@mui/icons-material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from "@mui/material"
+import { Add, Archive, Delete, Edit, Search, Settings } from "@mui/icons-material"
 import notitaService from '../services/NotitaService'; // importare serviciu ce populeaza listaNotite
-import sanitizeHtml from "sanitize-html"
-import ContentEditable from 'react-contenteditable';
-//modale ~~~~~~~~~~~~~~~~~
-import ModalCreareNotita from  '../components/modals/ModalCreareNotita';
-import ModalEditareNotita from '../components/modals/ModalEditareNotita';
 
-import { useRef } from "react";
+//modale ~~~~~~~~~~~~~~~~~
+import ModalCreareNotita from  '../components/modals/ModalCreareNotita'
+import ModalEditareNotita from '../components/modals/ModalEditareNotita'
 
 const butoane1 = { backgroundColor: '#1e1e1e', color: 'cyan', border: '1px solid black', fontSize: '2vh',  marginLeft: '3vh' }
 
@@ -26,6 +23,10 @@ const [updateFlag, setUpdateFlag] = useState(false);
 //const [deleteFlag, setDeleteFlag] = useState(false);
 //--- pentru Creare
 //const [createFlag, setCreateFlag] = useState(false);
+
+//content ce se transmite catre ModalEditareNotita - initial va fi textul notitei curente, pe care s-a facut click, stabilit in handleRowClick
+const [content, setContent] = useState(null) 
+const [contentTitlu, setContentTitlu] = useState(null) 
 
 
 //notita curenta (cu ea lucram pt afisare text notita, PUT, DELETE, etc)
@@ -48,10 +49,10 @@ useEffect(() => {
 
 //functie folosita la setarea notitei curente pt afisarea notitei in div
 //se activeaza atunci cand se da click pe o linie a tabelului, evenimentul este definit in tabel cu onClick pt tableRow
-
 const handleRowClick = (index) => {
     setNotitaCurenta(listaNotite[index])
-    setContent(listaNotite[index].textNotita)
+    setContent(listaNotite[index].textNotita) //setare content prima oara
+    setContentTitlu(listaNotite[index].titlu)
 }
 
 //MODALE
@@ -63,79 +64,10 @@ const [isOpenModalEditareNotita, setIsOpenModalEditareNotita] = useState(false);
 const ToggleModalEditareNotita = () => setIsOpenModalEditareNotita( ! isOpenModalEditareNotita);
 //MODALE
 
-const [content, setContent] = useState(null)
-
-
 //functie ce va actiona atunci cand dam click pe butonul de Edit (dupa ce se selecteaza o notita, pt a avea variabila notita curenta ne-nulla)
 const handleOpenModalEditare = () => {            
-    setTextNotitaNou(content)
     ToggleModalEditareNotita() //deschidere modal prin schimbare variabila de stare, din starea initiala false, in true cu functia de toggle ce inverseaza valoarea
 }
-//variabila de stare pt textul introdus de utilizator in campul editabil al text notita, se va seta pt notita curenta in server-side  
-const [textNotitaNou, setTextNotitaNou] = useState(null)
-
-
-
-//componenta care va afisa textul notitei, sub forma de <div>
-//se re-randeaza automat cand se schimba starea notitaCurenta, pentru ca variabila interna de stare 'content' depinde de ea 
-const CampTextNotita = ( {content} ) => {
-
-    const sanitizeConf = {
-        allowedTags: ["b", "i", "a", "p"],
-        allowedAttributes: { a: ["href"] }
-    };
-
-    const refContentEditable = useRef()
-
-    const handleBlur = () => {
-      const html = refContentEditable.current.innerHTML;
-      console.log({ html });
-      setContent(sanitizeHtml(html, sanitizeConf))
-    };
-
-    //functie pt manipularea apasarii TAB si ENTER     
-    const handleKeyDown = (evt) => {
-        const selection = window.getSelection()
-        const range = selection.getRangeAt(0)
-        if (evt.keyCode === 9) {
-            evt.preventDefault();
-            //key code pt TAB este 9. atunci cand useru apasa TAB, se insereaza 4 space-uri
-            const tabNode = document.createTextNode("\u00a0\u00a0\u00a0\u00a0")
-            range.insertNode(tabNode);
-            range.setStartAfter(tabNode);
-            range.setEndAfter(tabNode);
-        }
-        else if (evt.keyCode === 13) {
-            evt.preventDefault();
-            //key code pt ENTER este 13. atunci cand useru apasa ENTER, se insereaza '\n' 
-            //whiteSpace: 'pre-wrap' la table cell -- altfel nu merge
-            const textNode = document.createTextNode("\n")
-            range.insertNode(textNode)
-            range.setStartAfter(textNode)
-            range.setEndAfter(textNode)
-        }   
-        selection.removeAllRanges();
-        selection.addRange(range);
-    }
-
-    //componenta returnata sub forma de div cu un element interior de tip ContentEditable
-    return (
-        <ContentEditable 
-            innerRef={refContentEditable}
-            //setam ref-ul utilizand prop-ul innerRef. innerRef seteaza referinta pe elementul DOM, si putem lua innerHTML-ul lui
-            html={content}//inner html
-            onBlur={handleBlur}
-            onKeyDown={handleKeyDown}
-            tagName="div"             //ContentEditable va fi sub forma de div
-            style={{ 
-                marginLeft: '2vh', marginRight: '0.5vh', color: 'white', overflowWrap: 'break-word', wordWrap: 'break-word',
-                wordBreak: 'break-word', whiteSpace: 'pre-wrap', border: '1px solid #1e1e1e', padding: '1em', textAlign: 'justify',
-                height: '77vh', overflow: 'auto'
-            }}
-        />
-    )
-}
-
 
 return (
     <div style={{display: 'flex'}}>
@@ -181,8 +113,10 @@ return (
                 <ModalEditareNotita
                     show={isOpenModalEditareNotita} close={ToggleModalEditareNotita} 
                     notitaCurenta={notitaCurenta}   setNotitaCurenta={setNotitaCurenta} 
-                    textNotitaNou={textNotitaNou}   notitaService={notitaService} 
+                    notitaService={notitaService} 
                     updateFlag={updateFlag}         setUpdateFlag={setUpdateFlag}
+                    content={content}               setContent={setContent}
+                    contentTitlu={contentTitlu}     setContentTitlu={setContentTitlu}
                 />
             
                 <ModalCreareNotita  
@@ -204,8 +138,13 @@ return (
                         <Button variant="contained" style={{...butoane1}}><Settings style={{ color: "white"  }} /></Button>
                     </div>
 
-                    <div>
-                        <CampTextNotita content={content}/>
+                    <div 
+                        style={{ 
+                            marginLeft: '2vh', marginRight: '0.5vh', color: 'white', overflowWrap: 'break-word', wordWrap: 'break-word', wordBreak: 'break-word', 
+                            whiteSpace: 'pre-wrap', border: '1px solid #1e1e1e', padding: '1em', textAlign: 'justify',height: '77vh', overflow: 'auto'
+                        }}
+                    >
+                        {notitaCurenta.textNotita}
                     </div>
                 </div>
             ) : null
