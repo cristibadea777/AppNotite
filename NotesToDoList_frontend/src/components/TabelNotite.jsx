@@ -15,13 +15,14 @@ const TabelNotite = () => {
 //initializare lista notita ca fiind o lista goala utilizand hook-ul useState si populare prin apelarea serviciului
 const [listaNotite, setListaNotite] = useState([])
 
-//variabila de stare ce va declansa hook-ul useEffect pt a updata listaNotite 
-//fiecare flag va declansa o anumita functie de creare/editare/stergere (exemplu - updateFlag declanseaza functia de update a modalului ModalEditareNotita)  
-//--- pentru Editare
+//variabila de stare ce va declansa hook-ul useEffect pt a updata listaNotite sau seta anumite stari 
+//fiecare flag va declansa un anumit useEffect atunci cand se creaza/editeaza/sterge 
+
+//--- flag pentru Editare
 const [updateFlag, setUpdateFlag] = useState(false);
-//--- pentru Stergere
-//const [deleteFlag, setDeleteFlag] = useState(false);
-//--- pentru Creare
+//--- flag pentru Stergere
+const [deleteFlag, setDeleteFlag] = useState(false);
+//--- flag pentru Creare
 const [createFlag, setCreateFlag] = useState(false);
 
 //content ce se transmite catre ModalEditareNotita - initial va fi textul notitei curente, pe care s-a facut click, stabilit in handleRowClick
@@ -34,8 +35,8 @@ const [notitaCurenta, setNotitaCurenta] = useState(null)
 
 //hook React
 //prima oara ruleaza cand se monteaza componenta (cand se instantiaza componenta si se insereaza in DOM - Document Object Model) 
-//prima oara, useEffect ruleaza indiferent de starea [updateFlag, createFlag]
-//apoi, de fiecare data cand [updateFlag, createFlag] isi schimba valoarea din false in true, se porneste hook-ul
+//prima oara, useEffect ruleaza indiferent de starea updateFlag
+//apoi, de fiecare data cand updateFlag isi schimba valoarea din false in true, se porneste hook-ul
 useEffect(() => {
     notitaService.getNotite()
     .then(response => {
@@ -48,27 +49,28 @@ useEffect(() => {
 )
 
 //useEffect pt createFlag. dupa ce se creaza notita, se da refresh listei, SI notita curenta se va seta cu ultima notita din lista (cea creata)
+//la startul aplicatiei se va afisa si ultima notita salvata (daca vreau sa scot asta, pun if(createFlag){codu setare notita curenta...})
 useEffect(() => {
     notitaService.getNotite()
     .then(response => {
         //refresh lista notite
         setListaNotite(response.data) 
         //setare notita curenta si content initial 
-        const index = response.data.length - 1
-        setNotitaCurenta(response.data[index])
-        setContent      (response.data[index].textNotita) 
-        setContentTitlu (response.data[index].titlu)
+        //setam starea aici si nu in modal in .then dupa ce se creaza notita, pt ca setarea starii cu setState este asincrona iar 
+        //modificarile starii nu vor avea efect imediat, este o "promisiune"
+        //de asta se seteaza in useEffect 
+        if(response.data){
+            const index = response.data.length - 1
+            setNotitaCurenta(response.data[index])
+            setContent      (response.data[index].textNotita) 
+            setContentTitlu (response.data[index].titlu)
+        }
     })
     .catch(error => {
         console.error(error);
     });
 }, [createFlag]
 )
-
-
-
-
-
 
 //functie folosita la setarea notitei curente pt afisarea notitei in div
 //se activeaza atunci cand se da click pe o linie a tabelului, evenimentul este definit in tabel cu onClick pt tableRow

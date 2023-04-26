@@ -27,8 +27,8 @@ const TitluEditabilNotita = ( {contentTitlu, setContentTitlu} ) => {
             html={contentTitlu}//inner html
             tagName="div"             //ContentEditable va fi sub forma de div
             style={{ 
-                margin: '2vh', marginRight: '0.5vh', color: 'white', overflowWrap: 'break-word', wordWrap: 'break-word', wordBreak: 'break-word', 
-                whiteSpace: 'pre-wrap', border: '1px solid #1e1e1e', padding: '1em', textAlign: 'justify', overflow: 'hidden', width: '100%'
+                margin: '2vh', color: 'white', overflowWrap: 'break-word', wordWrap: 'break-word', wordBreak: 'break-word', 
+                whiteSpace: 'pre-wrap', border: '1px solid cyan', padding: '1em', paddingTop: '0.5em', textAlign: 'justify', overflow: 'hidden', width: '100%'
             }}
         />
     )

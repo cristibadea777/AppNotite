@@ -58,9 +58,9 @@ const ModalCreareNotita = ( {show, close, notitaService, notitaCurenta, setNotit
             }}
         >
             
-            <Box sx={{ display: "flex", flexDirection: 'column', height: '85%', width: '100%' }}>
+            <Box sx={{ display: "flex", flexDirection: 'column', height: '85%', width: '100%'}}>
 
-                <Box sx={{ display: "flex", height: '15%', justifyContent: 'center' }}>
+                <Box sx={{ display: "flex", height: '15%', justifyContent: 'center'}}>
                     <TitluEditabilNotita contentTitlu={contentTitlu} setContentTitlu={setContentTitlu}/>
                 </Box>
                 
@@ -94,6 +94,6 @@ const ModalCreareNotita = ( {show, close, notitaService, notitaCurenta, setNotit
             }
         </>
     )
-    
+
 }
 export default ModalCreareNotita;
