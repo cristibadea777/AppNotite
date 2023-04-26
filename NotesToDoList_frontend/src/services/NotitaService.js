@@ -10,15 +10,18 @@ class NotiteService {
     return axios.get(`http://localhost:8080/notite`);
   }
 
-  async updateNotita(notitaNoua){
+  async updateNotita(notita){
     //PUT REQUEST 
-    axios.put(`http://localhost:8080/notite`, notitaNoua);  
+    axios.put(`http://localhost:8080/notite`, notita);  
   }
 
-  async createNotita(notitaNoua){
+  async createNotita(notita){
     //POST REQUEST 
-    const response = await axios.post(`http://localhost:8080/notite`, notitaNoua);  
-    return response.data //pt a seta notita curenta cu raspunsul (in Controller se returneaza notita care se creaza)
+    axios.post(`http://localhost:8080/notite`, notita);  
+  }
+
+  async deleteNotita(notita){
+    axios.delete('http://localhost:8080/notite', { data: notita })
   }
 
 
