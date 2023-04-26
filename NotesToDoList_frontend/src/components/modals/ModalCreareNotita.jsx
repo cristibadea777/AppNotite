@@ -4,13 +4,12 @@ import { Box } from "@mui/system";
 import moment from "moment"; //pt data
 import { useState } from "react";
 
-
 //alte componente ~~~~~~~~~~~~~~~~~
 import CampEditabilTextNotita  from '../CampEditabilNotita.jsx'
 import TitluEditabilNotita     from '../TitluEditabilNotita.jsx'
 
 
-const ModalCreareNotita = ( {show, close, notitaService, notitaCurenta, setNotitaCurenta, createFlag, setCreateFlag} ) => {
+const ModalCreareNotita = ( {show, close, notitaService, createFlag, setCreateFlag} ) => {
 
     const [content, setContent] = useState(null) 
     const [contentTitlu, setContentTitlu] = useState(null) 
