@@ -1,7 +1,7 @@
-import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
+import * as React from "react"
+import AppBar from "@mui/material/AppBar"
+import Toolbar from "@mui/material/Toolbar"
+import Typography from "@mui/material/Typography"
 
 
 export default function SimpleAppBar() {
@@ -13,5 +13,5 @@ export default function SimpleAppBar() {
         </Typography>
       </Toolbar>
     </AppBar>
-  );
+  )
 }

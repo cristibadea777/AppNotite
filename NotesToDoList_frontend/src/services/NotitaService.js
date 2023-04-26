@@ -1,23 +1,23 @@
-import axios from 'axios';
+import axios from 'axios'
 
 class NotiteService {
   state = {
     listaNotite: []
-  };
+  }
 
   async getNotite() {
     //GET REQUEST 
-    return axios.get(`http://localhost:8080/notite`);
+    return axios.get(`http://localhost:8080/notite`)
   }
 
   async updateNotita(notita){
     //PUT REQUEST 
-    axios.put(`http://localhost:8080/notite`, notita);  
+    axios.put(`http://localhost:8080/notite`, notita)  
   }
 
   async createNotita(notita){
     //POST REQUEST 
-    axios.post(`http://localhost:8080/notite`, notita);  
+    axios.post(`http://localhost:8080/notite`, notita)  
   }
 
   async deleteNotita(notita){
@@ -27,6 +27,6 @@ class NotiteService {
 
 }
 
-const notiteService = new NotiteService();
+const notiteService = new NotiteService()
 
-export default notiteService;
+export default notiteService

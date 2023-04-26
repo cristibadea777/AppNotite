@@ -1,8 +1,8 @@
-import * as React from "react";
-import { useState, useEffect } from "react";
+import * as React from "react"
+import { useState, useEffect } from "react"
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from "@mui/material"
 import { Add, Archive, Delete, Edit, Search, Settings } from "@mui/icons-material"
-import notitaService from '../services/NotitaService'; // importare serviciu ce populeaza listaNotite
+import notitaService from '../services/NotitaService' // importare serviciu ce populeaza listaNotite
 
 //modale ~~~~~~~~~~~~~~~~~
 import ModalCreareNotita   from './modals/ModalCreareNotita'
@@ -20,11 +20,13 @@ const [listaNotite, setListaNotite] = useState([])
 //fiecare flag va declansa un anumit useEffect atunci cand se creaza/editeaza/sterge 
 
 //--- flag pentru Editare
-const [updateFlag, setUpdateFlag] = useState(false);
+const [updateFlag, setUpdateFlag] = useState(false)
 //--- flag pentru Stergere
-const [deleteFlag, setDeleteFlag] = useState(false);
+const [deleteFlag, setDeleteFlag] = useState(false)
 //--- flag pentru Creare
-const [createFlag, setCreateFlag] = useState(false);
+const [createFlag, setCreateFlag] = useState(false)
+//--- flag pentru Arhivare
+const [archiveFlag, setArchiveFlag] = useState(false)
 
 //content ce se transmite catre ModalEditareNotita - initial va fi textul notitei curente, pe care s-a facut click, stabilit in handleRowClick
 const [content, setContent] = useState(null) 
@@ -32,6 +34,11 @@ const [contentTitlu, setContentTitlu] = useState(null)
 
 //notita curenta (cu ea lucram pt afisare text notita, PUT, DELETE, etc)
 const [notitaCurenta, setNotitaCurenta] = useState(null)
+
+//linia din tabel selectata
+const [selectedRow, setSelectedRow] = useState(null)
+
+const culoare = 'white'
 
 //hook React
 //prima oara ruleaza cand se monteaza componenta (cand se instantiaza componenta si se insereaza in DOM - Document Object Model) 
@@ -45,7 +52,7 @@ useEffect(() =>
         })
         .catch(error => {
             console.error(error)
-        });
+        })
 
     }, [updateFlag]
 )
@@ -69,11 +76,12 @@ useEffect(() =>
                 setNotitaCurenta(response.data[index])
                 setContent      (response.data[index].textNotita) 
                 setContentTitlu (response.data[index].titlu)
+                setSelectedRow  (index) 
             }
         })
         .catch(error => {
-            console.error(error);
-        });
+            console.error(error)
+        })
 
     }, [createFlag]
 )
@@ -94,8 +102,8 @@ useEffect(() =>
             }
         })
         .catch(error => {
-            console.error(error);
-        });
+            console.error(error)
+        })
 
     }, [deleteFlag]
 )
@@ -107,6 +115,7 @@ const handleRowClick = (index) => {
     setNotitaCurenta(listaNotite[index])
     setContent(listaNotite[index].textNotita) //setare content prima oara
     setContentTitlu(listaNotite[index].titlu)
+    setSelectedRow(index) //setare variabila de stare cu valoarea indexului, pt a schimba bordura liniei de tabel selectate
 }
 
 //MODALE ~~~~~~~
@@ -122,6 +131,9 @@ const ToggleModalEditareNotita = () => setIsOpenModalEditareNotita( ! isOpenModa
 //modal stergere
 const [isOpenModalStergereNotita, setIsOpenModalStergereNotita] = useState(false)
 const ToggleModalStergereNotita = () => setIsOpenModalStergereNotita(! isOpenModalStergereNotita)
+//modal arhivare
+const [isOpenModalArhivareNotita, setIsopenModalArhivareNotita] = useState(false)
+const ToggleModalArhivareNotita = () => setIsopenModalArhivareNotita(! isOpenModalArhivareNotita)
 //~~~~~~~
 
 
@@ -143,7 +155,11 @@ return (
                         {listaNotite.map((notita, index) => (
                             <React.Fragment key={notita.notitaId}>
                                 <TableRow onClick={ () => handleRowClick(index) }>
-                                    <TableCell style={{ color: 'white', border: 'none', overflow: 'hidden',  }}>
+                                    <TableCell 
+                                        style={{ 
+                                            color: 'white', overflow: 'hidden', 
+                                            border: selectedRow === index ? '1px solid cyan' : 'none'
+                                        }}>
                                         <div style={{display: 'flex', flexDirection: 'column'}}>
                                             <div>
                                                 <h3>{notita.titlu}</h3>
@@ -188,6 +204,13 @@ return (
                     notitaCurenta={notitaCurenta}
                 />
 
+                <ModalArhivareNotita
+                    show={isOpenModalArhivareNotita} close={ToggleModalArhivareNotita}
+                    notitaService={notitaService}
+                    archiveFlag={archiveFlag}        setArchiveFlag={setArchiveFlag}
+                    notitaCurenta={notitaCurenta}
+                />
+
                         
             </TableContainer>
         </div>
@@ -198,15 +221,15 @@ return (
                 <div style={{width: '70vw'}}>
 
                     <div style={{display: 'flex', justifyContent: 'right', alignItems: 'center', height:'10vh', marginLeft: '3vh', marginRight: '0.5vh', marginBottom: '0.5vh', flexWrap: 'wrap'}}>
-                        <Button onClick={ () => ToggleModalEditareNotita() } variant="contained" style={{...butoane1}}><Edit     style={{ color: "blue"   }} /></Button>
-                        <Button variant="contained" style={{...butoane1}}><Archive  style={{ color: "yellow" }} /></Button>
+                        <Button onClick={ () => ToggleModalEditareNotita()  } variant="contained" style={{...butoane1}}><Edit     style={{ color: "blue"   }} /></Button>
+                        <Button onClick={ () => ToggleModalArhivareNotita() } variant="contained" style={{...butoane1}}><Archive  style={{ color: "yellow" }} /></Button>
                         <Button onClick={ ()=>  ToggleModalStergereNotita() } variant="contained" style={{...butoane1}}><Delete   style={{ color: "red"    }} /></Button>
                         <Button variant="contained" style={{...butoane1}}><Settings style={{ color: "white"  }} /></Button>
                     </div>
 
                     <div 
                         style={{ 
-                            marginLeft: '2vh', marginRight: '0.5vh', color: 'white', overflowWrap: 'break-word', wordWrap: 'break-word', wordBreak: 'break-word', 
+                            marginLeft: '2vh', marginRight: '0.5vh', color: culoare, overflowWrap: 'break-word', wordWrap: 'break-word', wordBreak: 'break-word', 
                             whiteSpace: 'pre-wrap', border: '1px solid #1e1e1e', padding: '1em', textAlign: 'justify',height: '77vh', overflow: 'auto'
                         }}
                     >
@@ -221,4 +244,4 @@ return (
 )
 
 }
-export default TabelNotite;
+export default TabelNotite

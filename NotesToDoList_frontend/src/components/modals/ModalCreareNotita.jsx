@@ -1,8 +1,8 @@
-import React from 'react';
-import { Modal, Button } from "@mui/material";
-import { Box } from "@mui/system";
-import moment from "moment"; //pt data
-import { useState } from "react";
+import React from 'react'
+import { Modal, Button } from "@mui/material"
+import { Box } from "@mui/system"
+import moment from "moment" //pt data
+import { useState } from "react"
 
 //alte componente ~~~~~~~~~~~~~~~~~
 import CampEditabilTextNotita  from '../CampEditabilNotita.jsx'
@@ -32,7 +32,7 @@ const ModalCreareNotita = ( {show, close, notitaService, createFlag, setCreateFl
             titlu:          contentTitlu,     
             dataScriere:    moment().format("DD-MM-YYYY"),
             dataModificare: moment().format("DD-MM-YYYY") 
-        };
+        }
         //creare notita 
         notitaService.createNotita(notitaNoua)
         .then(() => {
@@ -44,8 +44,8 @@ const ModalCreareNotita = ( {show, close, notitaService, createFlag, setCreateFl
             close() //inchidere modal, din true cand e deschid in false cu functia de toggle din TabelNotite ce inverseaza valoarea
         })
         .catch(error => {
-            console.error(error);
-        });
+            console.error(error)
+        })
     }
 
     //Content pentru Modalul Editare Notita
@@ -95,4 +95,4 @@ const ModalCreareNotita = ( {show, close, notitaService, createFlag, setCreateFl
     )
 
 }
-export default ModalCreareNotita;
+export default ModalCreareNotita

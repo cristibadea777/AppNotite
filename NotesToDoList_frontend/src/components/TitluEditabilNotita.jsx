@@ -1,7 +1,7 @@
-import React from 'react';
-import { useRef } from "react";
+import React from 'react'
+import { useRef } from "react"
 import sanitizeHtml from "sanitize-html"
-import ContentEditable from 'react-contenteditable';
+import ContentEditable from 'react-contenteditable'
 
 //componenta care va afisa TITLUL notitei, sub forma de <div>
 const TitluEditabilNotita = ( {contentTitlu, setContentTitlu} ) => {
@@ -9,14 +9,14 @@ const TitluEditabilNotita = ( {contentTitlu, setContentTitlu} ) => {
     const sanitizeConf = {
         allowedTags: ["b", "i", "a", "p"],
         allowedAttributes: { a: ["href"] }
-    };
+    }
 
     const refContentEditableTitlu = useRef()
 
     const setNewContentTitluNotita = () => {
-      const html = refContentEditableTitlu.current.innerHTML;
+      const html = refContentEditableTitlu.current.innerHTML
       setContentTitlu(sanitizeHtml(html, sanitizeConf))
-    };
+    }
 
     //componenta returnata sub forma de div cu un element interior de tip ContentEditable
     return (
@@ -33,4 +33,4 @@ const TitluEditabilNotita = ( {contentTitlu, setContentTitlu} ) => {
         />
     )
 }
-export default TitluEditabilNotita;
+export default TitluEditabilNotita

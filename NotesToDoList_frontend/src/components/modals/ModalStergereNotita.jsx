@@ -1,6 +1,6 @@
-import React from 'react';
-import { Modal, Button } from "@mui/material";
-import { Box } from "@mui/system";
+import React from 'react'
+import { Modal, Button } from "@mui/material"
+import { Box } from "@mui/system"
 
 const ModalStergereNotita = ( {show, close, deleteFlag, setDeleteFlag, notitaCurenta, notitaService} ) => {
     //functie pentru update notita 
@@ -13,8 +13,8 @@ const ModalStergereNotita = ( {show, close, deleteFlag, setDeleteFlag, notitaCur
             close() //inchidere modal
         })
         .catch(error => {
-            console.error(error);
-        });
+            console.error(error)
+        })
     }
 
     //Content pentru Modalul Stergere Notita
@@ -58,4 +58,4 @@ const ModalStergereNotita = ( {show, close, deleteFlag, setDeleteFlag, notitaCur
     )
 
 }
-export default ModalStergereNotita;
+export default ModalStergereNotita

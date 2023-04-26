@@ -1,7 +1,7 @@
-import React from 'react';
-import { useRef } from "react";
+import React from 'react'
+import { useRef } from "react"
 import sanitizeHtml from "sanitize-html"
-import ContentEditable from 'react-contenteditable';
+import ContentEditable from 'react-contenteditable'
 
 //componenta care va afisa textul notitei, sub forma de <div>
 //se re-randeaza automat cand se schimba starea notitaCurenta, pentru ca variabila interna de stare 'content' depinde de ea 
@@ -9,29 +9,29 @@ const CampEditabilTextNotita = ( {content, setContent} ) => {
     const sanitizeConf = {
         allowedTags: ["b", "i", "a", "p"],
         allowedAttributes: { a: ["href"] }
-    };
+    }
 
     const refContentEditable = useRef()
 
     const setNewContentNotita = () => {
-      const html = refContentEditable.current.innerHTML;
+      const html = refContentEditable.current.innerHTML
       setContent(sanitizeHtml(html, sanitizeConf))
-    };
+    }
 
     //functie pt manipularea apasarii TAB si ENTER     
     const handleKeyDown = (evt) => {
         const selection = window.getSelection()
         const range = selection.getRangeAt(0)
         if (evt.keyCode === 9) {
-            evt.preventDefault();
+            evt.preventDefault()
             //key code pt TAB este 9. atunci cand useru apasa TAB, se insereaza 4 space-uri
             const tabNode = document.createTextNode("\u00a0\u00a0\u00a0\u00a0")
-            range.insertNode(tabNode);
-            range.setStartAfter(tabNode);
-            range.setEndAfter(tabNode);
+            range.insertNode(tabNode)
+            range.setStartAfter(tabNode)
+            range.setEndAfter(tabNode)
         }
         else if (evt.keyCode === 13) {
-            evt.preventDefault();
+            evt.preventDefault()
             //key code pt ENTER este 13. atunci cand useru apasa ENTER, se insereaza '\n' 
             //whiteSpace: 'pre-wrap' la table cell -- altfel nu merge
             const textNode = document.createTextNode("\n")
@@ -39,8 +39,8 @@ const CampEditabilTextNotita = ( {content, setContent} ) => {
             range.setStartAfter(textNode)
             range.setEndAfter(textNode)
         }   
-        selection.removeAllRanges();
-        selection.addRange(range);
+        selection.removeAllRanges()
+        selection.addRange(range)
     }
 
     //componenta returnata sub forma de div cu un element interior de tip ContentEditable
@@ -59,4 +59,4 @@ const CampEditabilTextNotita = ( {content, setContent} ) => {
         />
     )
 }
-export default CampEditabilTextNotita;
+export default CampEditabilTextNotita

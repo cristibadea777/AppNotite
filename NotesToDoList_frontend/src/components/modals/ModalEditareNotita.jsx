@@ -1,7 +1,7 @@
-import React from 'react';
-import { Modal, Button } from "@mui/material";
-import { Box } from "@mui/system";
-import moment from "moment"; //pt data
+import React from 'react'
+import { Modal, Button } from "@mui/material"
+import { Box } from "@mui/system"
+import moment from "moment" //pt data
 
 
 //alte componente ~~~~~~~~~~~~~~~~~
@@ -26,7 +26,7 @@ const ModalEditareNotita = ( {show, close, notitaCurenta, setNotitaCurenta, noti
             textNotita:     content,         // Setare field-uri 
             titlu:          contentTitlu,     
             dataModificare: moment().format("DD-MM-YYYY") 
-        };
+        }
 
         //update notita
         notitaService.updateNotita(notitaNoua)
@@ -44,8 +44,8 @@ const ModalEditareNotita = ( {show, close, notitaCurenta, setNotitaCurenta, noti
             close() //inchidere modal, din true cand e deschid in false cu functia de toggle din TabelNotite ce inverseaza valoarea
         })
         .catch(error => {
-            console.error(error);
-        });
+            console.error(error)
+        })
 
     }
 
@@ -97,4 +97,4 @@ const ModalEditareNotita = ( {show, close, notitaCurenta, setNotitaCurenta, noti
     )
 
 }
-export default ModalEditareNotita;
+export default ModalEditareNotita
