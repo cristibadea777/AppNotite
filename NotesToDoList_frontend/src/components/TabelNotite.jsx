@@ -8,6 +8,7 @@ import notitaService from '../services/NotitaService' // importare serviciu ce p
 import ModalCreareNotita   from './modals/ModalCreareNotita'
 import ModalEditareNotita  from './modals/ModalEditareNotita'
 import ModalStergereNotita from './modals/ModalStergereNotita'
+import ModalArhivareNotita from './modals/ModalArhivareNotita'
 
 const butoane1 = { backgroundColor: '#1e1e1e', color: 'cyan', border: '1px solid black', fontSize: '2vh',  marginLeft: '3vh' }
 
@@ -86,7 +87,8 @@ useEffect(() =>
     }, [createFlag]
 )
 
-//useEffect pt deleteFlag. notitaCurenta se sterge, nu se seteaza alta in locul ei, userul trebuie sa aleaga alta pt a se seta
+//useEffect pt deleteFlag si archiveFlag
+//notitaCurenta se sterge sau arhiveaza, nu se seteaza alta in locul ei, userul trebuie sa aleaga alta pt a se seta
 useEffect(() => 
     {
         notitaService.getNotite()
@@ -94,18 +96,19 @@ useEffect(() =>
             //refresh lista notite
             setListaNotite(response.data) 
             //stergere content si notitaCurenta, daca s-a facut o stergere (useEffect la startup se cheama indiferent daca deleteFlag e false)
-            if(deleteFlag){
+            if(deleteFlag || archiveFlag){
                 setNotitaCurenta(null)
                 setContent      (null) 
                 setContentTitlu (null)   
-                setDeleteFlag(! deleteFlag) //setare inapoi in false
+                setDeleteFlag( ! deleteFlag) //setare inapoi in false
+                setArchiveFlag(! archiveFlag)
             }
         })
         .catch(error => {
             console.error(error)
         })
 
-    }, [deleteFlag]
+    }, [deleteFlag, archiveFlag]
 )
 
 

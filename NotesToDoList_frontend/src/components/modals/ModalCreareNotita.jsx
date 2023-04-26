@@ -31,7 +31,8 @@ const ModalCreareNotita = ( {show, close, notitaService, createFlag, setCreateFl
             textNotita:     content,          
             titlu:          contentTitlu,     
             dataScriere:    moment().format("DD-MM-YYYY"),
-            dataModificare: moment().format("DD-MM-YYYY") 
+            dataModificare: moment().format("DD-MM-YYYY"),
+            stare:          '' 
         }
         //creare notita 
         notitaService.createNotita(notitaNoua)
