@@ -21,14 +21,29 @@ public class NotitaService {
 		return notite;
 	}
 	
+	public List<Notita> getAllNotiteArhivate(){
+		List<Notita> notite = new ArrayList<Notita>();
+		notite = notitaRepository.findAllArhivate();
+		return notite;
+	}
+	
 	
 	public Optional <Notita> getNotita(long id) {
 		return notitaRepository.findById(id);
 	}
 	
 	
-	public Notita saveNotita(Notita notita) {
-		return notitaRepository.save(notita);
+	public void saveNotita(Notita notita) {
+		notitaRepository.save(notita);
+	}
+	
+	public void deleteNotita(Notita notita) {
+		notitaRepository.delete(notita);
+	}
+	
+	public void arhivareNotita(Notita notita) {
+		notita.setStare("arhivata");
+		notitaRepository.save(notita);
 	}
 
 	

@@ -42,8 +42,14 @@ public class Notita {
 
 	@Override
 	public String toString() {
-		return "Notita [notitaId=" + notitaId + ", titlu=" + titlu + ", textNotita=" + textNotita + ", imagine="
-				+ imagine + ", stare=" + stare + "]\n";
+		return "Notita\n[\nnotitaId = " + notitaId + 
+				",\ntitlu = " + titlu + 
+				",\ntextNotita = " + textNotita + 
+				",\nimagine = " + imagine + 
+				",\nstare = " + stare +
+				",\ndataScriere = " + dataScriere +
+				",\ndataModificare = " + dataModificare +
+				"\n]\n";
 	}
 
 

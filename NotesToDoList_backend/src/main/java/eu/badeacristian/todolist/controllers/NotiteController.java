@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import lombok.extern.log4j.Log4j2;
 @RequestMapping("/notite")
 @CrossOrigin(origins = "http://localhost:3000")
 @Log4j2
+@SuppressWarnings("unchecked")
 public class NotiteController {
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Dependente ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -31,15 +33,22 @@ public class NotiteController {
 		
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Atribute Model ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	@ModelAttribute(name = "listaNotite")
+	//listaNotite = notite nearhivate
 	public List<Notita> addListaNotiteToModel(){
 		return notitaService.getAllNotite();
 	}
+	
+	//listaNotiteArhivate
+	@ModelAttribute(name = "listaNotiteArhivate")
+	public List<Notita> addListaNotiteArhivateToModel(){
+		return notitaService.getAllNotiteArhivate();
+	}
+	
 		 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Cereri ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	@GetMapping
 	@Cacheable("false")
 	public List<Notita> afiseazaNotite(Model model) {
-		@SuppressWarnings("unchecked")
 		List<Notita> listaNotite = (List<Notita>) model.getAttribute("listaNotite");
 		return listaNotite;
 	}
@@ -50,16 +59,47 @@ public class NotiteController {
 		return notitaService.getNotita(id);
 	}
 	
+	@GetMapping("/arhivate")
+	@Cacheable("false")
+	public List<Notita> afiseazaNotiteArhivate(Model model){
+		List<Notita> listaNotiteArhivate = (List<Notita>) model.getAttribute("listaNotiteArhivate");
+		return listaNotiteArhivate;
+	}
+	
 	@PostMapping
-	public Notita scrieNotita(@RequestBody @Valid Notita notita) {
-		log.info("\n" +"Notita salvata: " + "\n" + notita.toString());
-		return notitaService.saveNotita(notita);
+	public void scrieNotita(@RequestBody @Valid Notita notita) {
+		log.info("\n" +"Notita creata: " + "\n" + notita.toString());
+		notitaService.saveNotita(notita);
 	}
 	
 	@PutMapping	
-	public Notita updateNotita(@RequestBody @Valid Notita notita) {
+	public void modificaNotita(@RequestBody @Valid Notita notita) {
 		log.info("\n" +"Notita modificata: " + "\n" + notita.toString());
-		return notitaService.saveNotita(notita);
+		try {
+			notitaService.saveNotita(notita);
+		} catch (Exception e) {
+			log.error("\nEroare: ~~~~~~~    " + e);
+		}
+	}
+	
+	@PutMapping("/arhivare")	
+	public void arhivareNotita(@RequestBody @Valid Notita notita) {
+		log.info("\n" +"Notita arhivata: " + "\n" + notita.toString());
+		try {
+			notitaService.arhivareNotita(notita);
+		} catch (Exception e) {
+			log.error("\nEroare: ~~~~~~~    " + e);
+		}
+	}
+	
+	@DeleteMapping
+	public void stergeNotita(@RequestBody @Valid Notita notita) {
+		log.info("\n" +"Notita de sters: " + "\n" + notita.toString());
+		try {
+			notitaService.deleteNotita(notita);
+		} catch (Exception e) {
+			log.error("\nEroare: ~~~~~~~    " + e);
+		}
 	}
 		
 	
