@@ -22,7 +22,7 @@ const [updateFlag, setUpdateFlag] = useState(false);
 //--- pentru Stergere
 //const [deleteFlag, setDeleteFlag] = useState(false);
 //--- pentru Creare
-//const [createFlag, setCreateFlag] = useState(false);
+const [createFlag, setCreateFlag] = useState(false);
 
 //content ce se transmite catre ModalEditareNotita - initial va fi textul notitei curente, pe care s-a facut click, stabilit in handleRowClick
 const [content, setContent] = useState(null) 
@@ -34,18 +34,41 @@ const [notitaCurenta, setNotitaCurenta] = useState(null)
 
 //hook React
 //prima oara ruleaza cand se monteaza componenta (cand se instantiaza componenta si se insereaza in DOM - Document Object Model) 
-//prima oara, useEffect ruleaza indiferent de starea updateFlag
-//apoi, de fiecare data cand updateFlag isi schimba valoarea din false in true, se porneste hook-ul
+//prima oara, useEffect ruleaza indiferent de starea [updateFlag, createFlag]
+//apoi, de fiecare data cand [updateFlag, createFlag] isi schimba valoarea din false in true, se porneste hook-ul
 useEffect(() => {
     notitaService.getNotite()
     .then(response => {
-        setListaNotite(response.data);
+        setListaNotite(response.data)
+    })
+    .catch(error => {
+        console.error(error)
+    });
+}, [updateFlag]
+)
+
+//useEffect pt createFlag. dupa ce se creaza notita, se da refresh listei, SI notita curenta se va seta cu ultima notita din lista (cea creata)
+useEffect(() => {
+    notitaService.getNotite()
+    .then(response => {
+        //refresh lista notite
+        setListaNotite(response.data) 
+        //setare notita curenta si content initial 
+        const index = response.data.length - 1
+        setNotitaCurenta(response.data[index])
+        setContent      (response.data[index].textNotita) 
+        setContentTitlu (response.data[index].titlu)
     })
     .catch(error => {
         console.error(error);
     });
-}, [updateFlag]
+}, [createFlag]
 )
+
+
+
+
+
 
 //functie folosita la setarea notitei curente pt afisarea notitei in div
 //se activeaza atunci cand se da click pe o linie a tabelului, evenimentul este definit in tabel cu onClick pt tableRow
@@ -121,6 +144,9 @@ return (
             
                 <ModalCreareNotita  
                     show={isOpenModalCreareNotita}  close={ToggleModalCreareNotita} 
+                    notitaService={notitaService} 
+                    notitaCurenta={notitaCurenta}   setNotitaCurenta={setNotitaCurenta} 
+                    createFlag={createFlag}         setCreateFlag={setCreateFlag}
                 />
                         
             </TableContainer>

@@ -26,7 +26,6 @@ const ModalEditareNotita = ( {show, close, notitaCurenta, setNotitaCurenta, noti
             textNotita:     content,         // Setare field-uri 
             titlu:          contentTitlu,     
             dataModificare: moment().format("DD-MM-YYYY") 
-            //la fel facut si pt titlu --content sa fie redenumit in contentTextNotita sau ceva, si sa mai fie inca o variabila cum e content, contentTitluNotita
         };
 
         //update notita
@@ -83,13 +82,7 @@ const ModalEditareNotita = ( {show, close, notitaCurenta, setNotitaCurenta, noti
         </Box>
     )
 
-
-
-
-
     return(
-        //DE SCOS ASTA DE AICI, LASAT DOAR UN DIV NEEDITABIL 
-        //PUSA IN MODALU EDIT IMPREUNA CU textNotitaNou  si contentu
         <>
             {
                 <Modal 
