@@ -12,7 +12,7 @@ import ModalArhivareNotita from './modals/ModalArhivareNotita'
 
 const butoane1 = { backgroundColor: '#1e1e1e', color: 'cyan', border: '1px solid black', fontSize: '2vh',  marginLeft: '3vh' }
 
-const TabelNotite = () => {
+const TabelNotite = ( {optiuneNotiteArhivate} ) => {
 
 //initializare lista notita ca fiind o lista goala utilizand hook-ul useState si populare prin apelarea serviciului
 const [listaNotite, setListaNotite] = useState([])
@@ -38,16 +38,6 @@ const [notitaCurenta, setNotitaCurenta] = useState(null)
 
 //linia din tabel selectata
 const [selectedRow, setSelectedRow] = useState(null)
-
-//selectare lista notite arhivate
-const [optiuneNotiteArhivate, setOptiuneNotiteArhivate] = useState(false)
-const ToggleOptiuneNotiteArhivate = () => {
-    setOptiuneNotiteArhivate(! optiuneNotiteArhivate)
-    setNotitaCurenta(null)
-    setSelectedRow(null)
-    setContent(null)
-    setContentTitlu(null)
-}
 
 //hook React
 //prima oara ruleaza cand se monteaza componenta (cand se instantiaza componenta si se insereaza in DOM - Document Object Model) 
@@ -126,8 +116,19 @@ useEffect( () =>
         //inauntrul accesarii e operatorul ternar ce decide ce metoda sa cheme, in functie de variabila optiuneNotiteArhivate    
         //asta doar pt ca nu imi placea if-ul
         notitaService[optiuneNotiteArhivate ? 'getNotiteArhivate' : 'getNotite']()
-        .then(response => setListaNotite(response.data))
+        .then(response => {
+            setListaNotite(response.data)
+            if(response.data){
+                //const index = response.data.length - 1
+                const index = 0
+                setNotitaCurenta(response.data[index])
+                setContent      (response.data[index].textNotita) 
+                setContentTitlu (response.data[index].titlu)
+                setSelectedRow  (index) 
+            }
+        })
         .catch(error => console.error(error))
+
     }, [optiuneNotiteArhivate]
 )
 
@@ -159,17 +160,13 @@ const [isOpenModalArhivareNotita, setIsopenModalArhivareNotita] = useState(false
 const ToggleModalArhivareNotita = () => setIsopenModalArhivareNotita(! isOpenModalArhivareNotita)
 //~~~~~~~
 
-
-
-
-
 return (
     <div style={{display: 'flex'}}>
 
         <div style={{width: '30vw'}}>
 
             <div style={{height: '10vh', display:'flex', alignItems: 'center', justifyContent:'left', flexWrap: 'wrap', marginBottom: '0.5vh'}}>
-                <Button variant="contained" onClick= { () => ToggleOptiuneNotiteArhivate() } style={{...butoane1, marginLeft: '0.5vh'}}><Search style={{ color: 'white' }} /></Button>
+                <Button variant="contained" style={{...butoane1, marginLeft: '0.5vh'}}><Search style={{ color: 'white' }} /></Button>
                 <>
                     {
                     ! optiuneNotiteArhivate ? (
@@ -264,7 +261,7 @@ return (
                         ) : 
                         (
                             <>
-                            <Button variant="contained" style={{...butoane1}}><Unarchive     style={{ color: "white"   }} /></Button>
+                            <Button variant="contained" style={{...butoane1}}><Unarchive     style={{ color: "yellow"   }} /></Button>
                             </>
                         )                    
                     }
