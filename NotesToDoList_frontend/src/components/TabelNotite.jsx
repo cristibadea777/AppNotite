@@ -1,7 +1,7 @@
 import * as React from "react"
 import { useState, useEffect } from "react"
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from "@mui/material"
-import { Add, Archive, Delete, Edit, Search, Settings } from "@mui/icons-material"
+import { Add, Archive, Delete, Edit, Search, Settings, Unarchive } from "@mui/icons-material"
 import notitaService from '../services/NotitaService' // importare serviciu ce populeaza listaNotite
 
 //modale ~~~~~~~~~~~~~~~~~
@@ -39,7 +39,15 @@ const [notitaCurenta, setNotitaCurenta] = useState(null)
 //linia din tabel selectata
 const [selectedRow, setSelectedRow] = useState(null)
 
-const culoare = 'white'
+//selectare lista notite arhivate
+const [optiuneNotiteArhivate, setOptiuneNotiteArhivate] = useState(false)
+const ToggleOptiuneNotiteArhivate = () => {
+    setOptiuneNotiteArhivate(! optiuneNotiteArhivate)
+    setNotitaCurenta(null)
+    setSelectedRow(null)
+    setContent(null)
+    setContentTitlu(null)
+}
 
 //hook React
 //prima oara ruleaza cand se monteaza componenta (cand se instantiaza componenta si se insereaza in DOM - Document Object Model) 
@@ -100,15 +108,27 @@ useEffect(() =>
                 setNotitaCurenta(null)
                 setContent      (null) 
                 setContentTitlu (null)   
-                setDeleteFlag( ! deleteFlag) //setare inapoi in false
-                setArchiveFlag(! archiveFlag)
             }
+            if(deleteFlag) { setDeleteFlag (! deleteFlag)  }
+            if(archiveFlag){ setArchiveFlag(! archiveFlag) }
         })
         .catch(error => {
             console.error(error)
         })
 
     }, [deleteFlag, archiveFlag]
+)
+
+//useEffect pt schimbare din notite active in notite arhivate si invers
+useEffect( () => 
+    {
+        //folosesc notatia "brackets []" in locul "dot ." pt a accesa in mod dinamic metoda getNotiteArhivate sau metoda getNotite al serviciului notitaService
+        //inauntrul accesarii e operatorul ternar ce decide ce metoda sa cheme, in functie de variabila optiuneNotiteArhivate    
+        //asta doar pt ca nu imi placea if-ul
+        notitaService[optiuneNotiteArhivate ? 'getNotiteArhivate' : 'getNotite']()
+        .then(response => setListaNotite(response.data))
+        .catch(error => console.error(error))
+    }, [optiuneNotiteArhivate]
 )
 
 
@@ -140,15 +160,24 @@ const ToggleModalArhivareNotita = () => setIsopenModalArhivareNotita(! isOpenMod
 //~~~~~~~
 
 
+
+
+
 return (
     <div style={{display: 'flex'}}>
 
         <div style={{width: '30vw'}}>
 
             <div style={{height: '10vh', display:'flex', alignItems: 'center', justifyContent:'left', flexWrap: 'wrap', marginBottom: '0.5vh'}}>
-                <Button variant="contained" style={{...butoane1, marginLeft: '0.5vh'}}><Search style={{ color: 'white' }} /></Button>
-                <Button variant="contained" onClick ={ () => ToggleModalCreareNotita() } style={{...butoane1, marginLeft: '0.5vh'}}><Add style={{ color: 'white' }} /></Button>
-            </div>
+                <Button variant="contained" onClick= { () => ToggleOptiuneNotiteArhivate() } style={{...butoane1, marginLeft: '0.5vh'}}><Search style={{ color: 'white' }} /></Button>
+                <>
+                    {
+                    ! optiuneNotiteArhivate ? (
+                        <Button variant="contained" onClick ={ () => ToggleModalCreareNotita() } style={{...butoane1, marginLeft: '0.5vh'}}><Add style={{ color: 'white' }} /></Button>
+                    ) : null
+                    }
+                </>
+                </div>
 
             <TableContainer component={Paper} style={{ backgroundColor: '#1e1e1e', height: '81vh', overflowY: 'auto', overflowX: 'hidden', whiteSpace: 'nowrap', marginLeft: '0.5vh',}}>
                 <Table>
@@ -220,26 +249,40 @@ return (
         
         <>
         {
-            notitaCurenta ? (
-                <div style={{width: '70vw'}}>
-
-                    <div style={{display: 'flex', justifyContent: 'right', alignItems: 'center', height:'10vh', marginLeft: '3vh', marginRight: '0.5vh', marginBottom: '0.5vh', flexWrap: 'wrap'}}>
-                        <Button onClick={ () => ToggleModalEditareNotita()  } variant="contained" style={{...butoane1}}><Edit     style={{ color: "blue"   }} /></Button>
-                        <Button onClick={ () => ToggleModalArhivareNotita() } variant="contained" style={{...butoane1}}><Archive  style={{ color: "yellow" }} /></Button>
-                        <Button onClick={ ()=>  ToggleModalStergereNotita() } variant="contained" style={{...butoane1}}><Delete   style={{ color: "red"    }} /></Button>
-                        <Button variant="contained" style={{...butoane1}}><Settings style={{ color: "white"  }} /></Button>
-                    </div>
-
-                    <div 
-                        style={{ 
-                            marginLeft: '2vh', marginRight: '0.5vh', color: culoare, overflowWrap: 'break-word', wordWrap: 'break-word', wordBreak: 'break-word', 
-                            whiteSpace: 'pre-wrap', border: '1px solid #1e1e1e', padding: '1em', textAlign: 'justify',height: '77vh', overflow: 'auto'
-                        }}
-                    >
-                        {notitaCurenta.textNotita}
-                    </div>
+        notitaCurenta ? 
+        (
+            <div style={{width: '70vw'}}>
+                <div style={{display: 'flex', justifyContent: 'right', alignItems: 'center', height:'10vh', marginLeft: '3vh', marginRight: '0.5vh', marginBottom: '0.5vh', flexWrap: 'wrap'}}>
+                    { 
+                        ! optiuneNotiteArhivate ? (
+                            <>
+                            <Button onClick={ () => ToggleModalEditareNotita()  } variant="contained" style={{...butoane1}}><Edit     style={{ color: "blue"   }} /></Button>
+                            <Button onClick={ () => ToggleModalArhivareNotita() } variant="contained" style={{...butoane1}}><Archive  style={{ color: "yellow" }} /></Button>
+                            <Button onClick={ ()=>  ToggleModalStergereNotita() } variant="contained" style={{...butoane1}}><Delete   style={{ color: "red"    }} /></Button>
+                            <Button variant="contained" style={{...butoane1}}><Settings style={{ color: "white"  }} /></Button>
+                            </>
+                        ) : 
+                        (
+                            <>
+                            <Button variant="contained" style={{...butoane1}}><Unarchive     style={{ color: "white"   }} /></Button>
+                            </>
+                        )                    
+                    }
                 </div>
-            ) : null
+
+                <div 
+                    style={{ 
+                        marginLeft: '2vh', marginRight: '0.5vh', color: 'white', overflowWrap: 'break-word', wordWrap: 'break-word', wordBreak: 'break-word', 
+                        whiteSpace: 'pre-wrap', border: '1px solid #1e1e1e', padding: '1em', textAlign: 'justify',height: '77vh', overflow: 'auto'
+                    }}
+                 >
+                    {notitaCurenta.textNotita}
+                </div>
+            </div>
+        ) :
+        ( 
+            null
+        )
         }
         </>
 
