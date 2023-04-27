@@ -4,7 +4,7 @@ import Toolbar from "@mui/material/Toolbar"
 import Typography from "@mui/material/Typography"
 import {MenuItem, Select } from "@mui/material"
 
-export default function SimpleAppBar( {setOptiuneNotiteArhivate} ) {
+const Appbar = ( {setOptiuneNotiteArhivate} ) => {
 
   const handleSelectChange = (event) => {
     setOptiuneNotiteArhivate(event.target.value)
@@ -12,9 +12,7 @@ export default function SimpleAppBar( {setOptiuneNotiteArhivate} ) {
 
   return (
     <AppBar position="static">
-
       <Toolbar component="div" sx={{backgroundColor: 'black'}}>
-
         <Select 
           variant="standard"
           disableUnderline = {true}
@@ -44,3 +42,4 @@ export default function SimpleAppBar( {setOptiuneNotiteArhivate} ) {
     </AppBar>
   )
 }
+export default Appbar
