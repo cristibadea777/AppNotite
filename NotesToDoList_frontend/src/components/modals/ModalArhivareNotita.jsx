@@ -57,9 +57,9 @@ const ModalArhivareNotita = ( {show, close, archiveFlag, setArchiveFlag, notitaC
                 <>
                 {
                     ! optiuneNotiteArhivate ? (
-                        <Button variant="contained" sx={{ color: 'black', backgroundColor: "yellow", "&:hover": { backgroundColor: "#FF4500" }, margin: '2vh' }} onClick={ handleArhivareNotita }> Arhivează </Button>
+                        <Button variant="contained" sx={{ color: 'black', backgroundColor: "yellow", "&:hover": { backgroundColor: "orange" }, margin: '2vh' }} onClick={ handleArhivareNotita }> Arhivează </Button>
                     ) :
-                        <Button variant="contained" sx={{ color: 'black', backgroundColor: "white", "&:hover": { backgroundColor: "#FF4500" }, marginRight: '1.5vh' }} onClick={ handleDezarhivareNotita }> Dezarhivează </Button>
+                        <Button variant="contained" sx={{ color: 'black', backgroundColor: "white", "&:hover": { backgroundColor: "cyan" }, marginRight: '1.5vh' }} onClick={ handleDezarhivareNotita }> Dezarhivează </Button>
                 }
                 </>
                 

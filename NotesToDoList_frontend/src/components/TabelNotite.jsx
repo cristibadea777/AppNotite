@@ -89,7 +89,7 @@ useEffect(() =>
 //notitaCurenta se sterge sau arhiveaza, nu se seteaza alta in locul ei, userul trebuie sa aleaga alta pt a se seta
 useEffect(() => 
     {
-        ! optiuneNotiteArhivate ? notitaService.getNotite() : notitaService.getNotiteArhivate() 
+        notitaService[optiuneNotiteArhivate ? 'getNotiteArhivate' : 'getNotite']()
         .then(response => {
             //refresh lista notite
             setListaNotite(response.data) 
@@ -262,7 +262,7 @@ return (
                         ) : 
                         (
                             <>
-                            <Button onClick={ () => ToggleModalArhivareNotita() } variant="contained" style={{...butoane1}}><Unarchive     style={{ color: "yellow"   }} /></Button>
+                            <Button onClick={ () => ToggleModalArhivareNotita() } variant="contained" style={{...butoane1}}><Unarchive     style={{ color: "white"   }} /></Button>
                             </>
                         )                    
                     }
