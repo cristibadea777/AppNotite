@@ -89,7 +89,7 @@ useEffect(() =>
 //notitaCurenta se sterge sau arhiveaza, nu se seteaza alta in locul ei, userul trebuie sa aleaga alta pt a se seta
 useEffect(() => 
     {
-        notitaService.getNotite()
+        ! optiuneNotiteArhivate ? notitaService.getNotite() : notitaService.getNotiteArhivate() 
         .then(response => {
             //refresh lista notite
             setListaNotite(response.data) 
@@ -106,7 +106,7 @@ useEffect(() =>
             console.error(error)
         })
 
-    }, [deleteFlag, archiveFlag]
+    }, [deleteFlag, archiveFlag, optiuneNotiteArhivate]
 )
 
 //useEffect pt schimbare din notite active in notite arhivate si invers
@@ -238,6 +238,7 @@ return (
                     notitaService={notitaService}
                     archiveFlag={archiveFlag}        setArchiveFlag={setArchiveFlag}
                     notitaCurenta={notitaCurenta}
+                    optiuneNotiteArhivate={optiuneNotiteArhivate}
                 />
 
                         
@@ -255,13 +256,13 @@ return (
                             <>
                             <Button onClick={ () => ToggleModalEditareNotita()  } variant="contained" style={{...butoane1}}><Edit     style={{ color: "blue"   }} /></Button>
                             <Button onClick={ () => ToggleModalArhivareNotita() } variant="contained" style={{...butoane1}}><Archive  style={{ color: "yellow" }} /></Button>
-                            <Button onClick={ ()=>  ToggleModalStergereNotita() } variant="contained" style={{...butoane1}}><Delete   style={{ color: "red"    }} /></Button>
+                            <Button onClick={ () => ToggleModalStergereNotita() } variant="contained" style={{...butoane1}}><Delete   style={{ color: "red"    }} /></Button>
                             <Button variant="contained" style={{...butoane1}}><Settings style={{ color: "white"  }} /></Button>
                             </>
                         ) : 
                         (
                             <>
-                            <Button variant="contained" style={{...butoane1}}><Unarchive     style={{ color: "yellow"   }} /></Button>
+                            <Button onClick={ () => ToggleModalArhivareNotita() } variant="contained" style={{...butoane1}}><Unarchive     style={{ color: "yellow"   }} /></Button>
                             </>
                         )                    
                     }
