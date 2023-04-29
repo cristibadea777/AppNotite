@@ -9,6 +9,7 @@ import ModalCreareNotita   from './modals/ModalCreareNotita'
 import ModalEditareNotita  from './modals/ModalEditareNotita'
 import ModalStergereNotita from './modals/ModalStergereNotita'
 import ModalArhivareNotita from './modals/ModalArhivareNotita'
+import ModalSetariNotita   from "./modals/ModalSetariNotita"
 
 const butoane1 = { backgroundColor: '#1e1e1e', color: 'cyan', border: '1px solid black', fontSize: '2vh',  marginLeft: '3vh' }
 
@@ -70,13 +71,11 @@ useEffect(() =>
             //setam starea aici si nu in modal in .then dupa ce se creaza notita, pt ca setarea starii cu setState este asincrona iar 
             //modificarile starii nu vor avea efect imediat, este o "promisiune"
             //de asta se seteaza in useEffect 
-            if(response.data){
-                const index = response.data.length - 1
-                setNotitaCurenta(response.data[index])
-                setContent      (response.data[index].textNotita) 
-                setContentTitlu (response.data[index].titlu)
-                setSelectedRow  (index) 
-            }
+            const index = response.data.length - 1
+            setNotitaCurenta(response.data[index])
+            setContent      (response.data[index].textNotita) 
+            setContentTitlu (response.data[index].titlu)
+            setSelectedRow  (index) 
         })
         .catch(error => {
             console.error(error)
@@ -158,9 +157,13 @@ const ToggleModalStergereNotita = () => setIsOpenModalStergereNotita(! isOpenMod
 //modal arhivare
 const [isOpenModalArhivareNotita, setIsopenModalArhivareNotita] = useState(false)
 const ToggleModalArhivareNotita = () => setIsopenModalArhivareNotita(! isOpenModalArhivareNotita)
+//modal setari 
+const [isOpenModalSetariNotita, setIsOpenModalSetariNotita] = useState(false)
+const ToggleModalSetariNotita = () => setIsOpenModalSetariNotita(! isOpenModalSetariNotita)
+
 //~~~~~~~
 
-return (
+return (    
     <div style={{display: 'flex'}}>
 
         <div style={{width: '30vw'}}>
@@ -191,7 +194,7 @@ return (
                                         }}>
                                         <div style={{display: 'flex', flexDirection: 'column'}}>
                                             <div>
-                                                <h3>{notita.titlu}</h3>
+                                                <h3 style={{ color: notita.culoareTitlu }}>{notita.titlu}</h3>
                                             </div> 
                                             <div style={{width: '100%'}}>
                                                 <div style={{display:'flex', justifyContent:'left', flexWrap: 'wrap'}}>
@@ -241,6 +244,13 @@ return (
                     optiuneNotiteArhivate={optiuneNotiteArhivate}
                 />
 
+                <ModalSetariNotita
+                    show={isOpenModalSetariNotita}  close={ToggleModalSetariNotita}
+                    notitaService={notitaService}
+                    notitaCurenta={notitaCurenta}   setNotitaCurenta={setNotitaCurenta}
+                    updateFlag={updateFlag}         setUpdateFlag={setUpdateFlag}
+                />
+
                         
             </TableContainer>
         </div>
@@ -257,7 +267,7 @@ return (
                             <Button onClick={ () => ToggleModalEditareNotita()  } variant="contained" style={{...butoane1}}><Edit     style={{ color: "blue"   }} /></Button>
                             <Button onClick={ () => ToggleModalArhivareNotita() } variant="contained" style={{...butoane1}}><Archive  style={{ color: "yellow" }} /></Button>
                             <Button onClick={ () => ToggleModalStergereNotita() } variant="contained" style={{...butoane1}}><Delete   style={{ color: "red"    }} /></Button>
-                            <Button variant="contained" style={{...butoane1}}><Settings style={{ color: "white"  }} /></Button>
+                            <Button onClick={ () => ToggleModalSetariNotita()   } variant="contained" style={{...butoane1}}><Settings style={{ color: "white"  }} /></Button>
                             </>
                         ) : 
                         (
@@ -270,11 +280,13 @@ return (
 
                 <div 
                     style={{ 
-                        marginLeft: '2vh', marginRight: '0.5vh', color: 'white', overflowWrap: 'break-word', wordWrap: 'break-word', wordBreak: 'break-word', 
+                        marginLeft: '2vh', marginRight: '0.5vh', color: notitaCurenta.culoareText, overflowWrap: 'break-word', wordWrap: 'break-word', wordBreak: 'break-word', 
                         whiteSpace: 'pre-wrap', border: '1px solid #1e1e1e', padding: '1em', textAlign: 'justify',height: '77vh', overflow: 'auto'
                     }}
                  >
+
                     {notitaCurenta.textNotita}
+
                 </div>
             </div>
         ) :
