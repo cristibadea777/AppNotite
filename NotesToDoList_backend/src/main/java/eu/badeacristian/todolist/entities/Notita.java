@@ -23,14 +23,16 @@ public class Notita {
 	//private long ownerId;
 	
 	private String titlu;
+	@Column(columnDefinition="LONGTEXT")
 	private String textNotita;
 	private String imagine;
 	private String stare;
-	@Column(columnDefinition="LONGTEXT")
 	private String dataScriere;
 	private String dataModificare;
+	private String culoareTitlu;
+	private String culoareText;
 	
-	public Notita(String titlu, String textNotita, String imagine, String stare, String dataScriere, String dataModificare) {
+	public Notita(String titlu, String textNotita, String imagine, String stare, String dataScriere, String dataModificare, String culoareTitlu, String culoareText) {
 		super();
 		this.titlu 			= titlu;
 		this.textNotita 	= textNotita;
@@ -38,7 +40,10 @@ public class Notita {
 		this.stare 			= stare;
 		this.dataScriere 	= dataScriere;
 		this.dataModificare = dataModificare;
+		this.culoareTitlu 	= culoareTitlu;
+		this.culoareText	= culoareText;
 	}
+	
 
 	@Override
 	public String toString() {

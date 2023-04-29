@@ -42,7 +42,8 @@ public class NotitaService {
 	}
 	
 	public void arhivareNotita(Notita notita) {
-		notita.setStare("arhivata");
+		//cele nearhivate (cu starea goala) se vor arhiva, cele arhivate se dezarhiveaza
+		notita.setStare(notita.getStare().equals("arhivata") ? "" : "arhivata");
 		notitaRepository.save(notita);
 	}
 
