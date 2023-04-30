@@ -18,4 +18,7 @@ public interface NotitaRepository extends JpaRepository<Notita, Long> {
 	@Query(value = "SELECT * FROM notita WHERE stare='arhivata'", nativeQuery = true)
 	List<Notita> findAllArhivate();
 	
+	//search
+	List<Notita> findByTitluContainingAndStare(String text, String stare); //stare "" pt curente, "arhivata" pt arhivate 
+	
 }

@@ -66,6 +66,23 @@ public class NotiteController {
 		return listaNotiteArhivate;
 	}
 	
+	
+	@GetMapping("/cautare/{text}")
+	@Cacheable("false")
+	public List<Notita> afiseazaCautareNotite(@PathVariable("text") String text, Model model){
+		List<Notita> listaCautareNotite = notitaService.cautareNotita(text);
+		List<Notita> listaNotite = (List<Notita>) model.getAttribute("listaNotite");
+		return ! text.isEmpty() ? listaCautareNotite : listaNotite;
+	}
+	
+	@GetMapping("/cautare/arhivate/{text}")
+	@Cacheable("false")
+	public List<Notita> afiseazaCautareNotiteArhivate(@PathVariable("text") String text, Model model){
+		List<Notita> listaCautareNotiteArhivate = notitaService.cautareNotitaArhivata(text);
+		List<Notita> listaNotiteArhivate = (List<Notita>) model.getAttribute("listaNotiteArhivate");
+		return ! text.isEmpty() ? listaCautareNotiteArhivate : listaNotiteArhivate;
+	}
+	
 	@PostMapping
 	public void scrieNotita(@RequestBody @Valid Notita notita) {
 		log.info("\n" +"Notita creata: " + "\n" + notita.toString());

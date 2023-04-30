@@ -1,6 +1,5 @@
 package eu.badeacristian.todolist.services;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +15,12 @@ public class NotitaService {
 	
 	
 	public List<Notita> getAllNotite(){
-		List<Notita> notite = new ArrayList<Notita>();
-		notite = notitaRepository.findAll();
-		return notite;
+		return notitaRepository.findAll();
 	}
 	
 	public List<Notita> getAllNotiteArhivate(){
-		List<Notita> notite = new ArrayList<Notita>();
-		notite = notitaRepository.findAllArhivate();
-		return notite;
+		return notitaRepository.findAllArhivate();
 	}
-	
 	
 	public Optional <Notita> getNotita(long id) {
 		return notitaRepository.findById(id);
@@ -45,6 +39,14 @@ public class NotitaService {
 		//cele nearhivate (cu starea goala) se vor arhiva, cele arhivate se dezarhiveaza
 		notita.setStare(notita.getStare().equals("arhivata") ? "" : "arhivata");
 		notitaRepository.save(notita);
+	}
+	
+	public List<Notita> cautareNotita(String text) {
+		return notitaRepository.findByTitluContainingAndStare(text, "");
+	}
+
+	public List<Notita> cautareNotitaArhivata(String text) {
+		return notitaRepository.findByTitluContainingAndStare(text, "arhivata");
 	}
 
 	
