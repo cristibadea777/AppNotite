@@ -274,6 +274,7 @@ return (
                     setContent={setContent} 
                     setContentTitlu={setContentTitlu} 
                     setSelectedRow={setSelectedRow}
+                    optiuneNotiteArhivate={optiuneNotiteArhivate}
                 />
 
                         

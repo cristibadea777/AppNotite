@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal, Button } from "@mui/material"
 import { Box } from "@mui/system"
 
-const ModalCautare = ( {show, close, notitaService, searchTitlu, setSearchTitlu, setListaNotite, setNotitaCurenta, setContent, setContentTitlu, setSelectedRow} ) => {
+const ModalCautare = ( {show, close, notitaService, searchTitlu, setSearchTitlu, setListaNotite, setNotitaCurenta, setContent, setContentTitlu, setSelectedRow, optiuneNotiteArhivate} ) => {
 
 
     const handleChangeInputSearchTitlu = ( {target} ) => {
@@ -11,6 +11,26 @@ const ModalCautare = ( {show, close, notitaService, searchTitlu, setSearchTitlu,
 
     const handleCautare = () => {
         notitaService[searchTitlu ? 'getNotiteCautare' : 'getNotite'](searchTitlu)
+        .then(response => {
+            setListaNotite(response.data)
+            if(response.data){
+                //const index = response.data.length - 1
+                const index = 0
+                setNotitaCurenta(response.data[index])
+                setContent      (response.data[index].textNotita) 
+                setContentTitlu (response.data[index].titlu)
+                setSelectedRow  (index) 
+                setSearchTitlu('')
+            }
+            close()
+        })
+        .catch(error => {
+            console.error(error)
+        })
+    }
+
+    const handleCautareArhivate = () => {
+        notitaService[searchTitlu ? 'getNotiteCautareArhivate' : 'getNotiteArhivate'](searchTitlu)
         .then(response => {
             setListaNotite(response.data)
             if(response.data){
@@ -55,9 +75,21 @@ const ModalCautare = ( {show, close, notitaService, searchTitlu, setSearchTitlu,
                 <Button variant="contained" onClick={ close } sx={{margin: '2vh'}}>
                     Aulează
                 </Button>
-                <Button onClick={handleCautare}  variant="contained" sx={{ backgroundColor: "red", "&:hover": { backgroundColor: "#FF4500" }, margin: '2vh' }} >
-                    Caută
-                </Button>
+
+                <>
+                {
+                    ! optiuneNotiteArhivate ? (
+                        <Button onClick={handleCautare}  variant="contained" sx={{ backgroundColor: "red", "&:hover": { backgroundColor: "#FF4500" }, margin: '2vh' }} >
+                            Caută
+                        </Button>
+                    ) :
+                        <Button onClick={handleCautareArhivate}  variant="contained" sx={{ backgroundColor: "red", "&:hover": { backgroundColor: "#FF4500" }, margin: '2vh' }} >
+                            Caută Arhivate
+                        </Button>
+
+                }
+                </>
+
             </Box>
 
         </Box>
