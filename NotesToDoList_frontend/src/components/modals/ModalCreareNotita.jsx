@@ -11,8 +11,8 @@ import TitluEditabilNotita     from '../TitluEditabilNotita.jsx'
 
 const ModalCreareNotita = ( {show, close, notitaService, createFlag, setCreateFlag} ) => {
 
-    const [content, setContent] = useState(null) 
-    const [contentTitlu, setContentTitlu] = useState(null) 
+    const [content, setContent] = useState("") 
+    const [contentTitlu, setContentTitlu] = useState("") 
 
     const handleCloseModal = () => {
         //golire text si titlu din modal creare

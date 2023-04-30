@@ -10,6 +10,7 @@ import ModalEditareNotita  from './modals/ModalEditareNotita'
 import ModalStergereNotita from './modals/ModalStergereNotita'
 import ModalArhivareNotita from './modals/ModalArhivareNotita'
 import ModalSetariNotita   from "./modals/ModalSetariNotita"
+import ModalCautare        from "./modals/ModalCautare"
 
 const butoane1 = { backgroundColor: '#1e1e1e', color: 'cyan', border: '1px solid black', fontSize: '2vh',  marginLeft: '3vh' }
 
@@ -33,12 +34,12 @@ const [archiveFlag, setArchiveFlag] = useState(false)
 //content ce se transmite catre ModalEditareNotita - initial va fi textul notitei curente, pe care s-a facut click, stabilit in handleRowClick
 const [content, setContent] = useState(null) 
 const [contentTitlu, setContentTitlu] = useState(null) 
-
 //notita curenta (cu ea lucram pt afisare text notita, PUT, DELETE, etc)
 const [notitaCurenta, setNotitaCurenta] = useState(null)
-
 //linia din tabel selectata
 const [selectedRow, setSelectedRow] = useState(null)
+//pentru cautare
+const [searchTitlu, setSearchTitlu] = useState('')
 
 //hook React
 //prima oara ruleaza cand se monteaza componenta (cand se instantiaza componenta si se insereaza in DOM - Document Object Model) 
@@ -160,6 +161,10 @@ const ToggleModalArhivareNotita = () => setIsopenModalArhivareNotita(! isOpenMod
 //modal setari 
 const [isOpenModalSetariNotita, setIsOpenModalSetariNotita] = useState(false)
 const ToggleModalSetariNotita = () => setIsOpenModalSetariNotita(! isOpenModalSetariNotita)
+//modal cautare
+const [isOpenModalCautare, setIsOpenModalCautare] = useState(false)
+const ToggleModalCautare = () => setIsOpenModalCautare(! isOpenModalCautare)
+
 
 //~~~~~~~
 
@@ -169,9 +174,9 @@ return (
         <div style={{width: '30vw'}}>
 
             <div style={{height: '10vh', display:'flex', alignItems: 'center', justifyContent:'left', flexWrap: 'wrap', marginBottom: '0.5vh'}}>
-                <Button variant="contained" style={{...butoane1, marginLeft: '0.5vh'}}><Search style={{ color: 'white' }} /></Button>
+                <Button variant="contained" onClick ={ () => ToggleModalCautare() }  style={{...butoane1, marginLeft: '0.5vh'}}><Search style={{ color: 'white' }} /></Button>
                 <>
-                    {
+                    {   
                     ! optiuneNotiteArhivate ? (
                         <Button variant="contained" onClick ={ () => ToggleModalCreareNotita() } style={{...butoane1, marginLeft: '0.5vh'}}><Add style={{ color: 'white' }} /></Button>
                     ) : null
@@ -249,6 +254,18 @@ return (
                     notitaService={notitaService}
                     notitaCurenta={notitaCurenta}   setNotitaCurenta={setNotitaCurenta}
                     updateFlag={updateFlag}         setUpdateFlag={setUpdateFlag}
+                />
+
+                <ModalCautare
+                    show={isOpenModalCautare}       close={ToggleModalCautare}
+                    notitaService={notitaService}
+                    updateFlag={updateFlag}         setUpdateFlag={setUpdateFlag}
+                    searchTitlu={searchTitlu}       setSearchTitlu={setSearchTitlu}
+                    setListaNotite={setListaNotite}
+                    setNotitaCurenta={setNotitaCurenta}
+                    setContent={setContent} 
+                    setContentTitlu={setContentTitlu} 
+                    setSelectedRow={setSelectedRow}
                 />
 
                         

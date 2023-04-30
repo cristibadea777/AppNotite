@@ -48,7 +48,7 @@ const CampEditabilTextNotita = ( {content, setContent} ) => {
         <ContentEditable 
             innerRef={refContentEditable}
             //setam ref-ul utilizand prop-ul innerRef. innerRef seteaza referinta pe elementul DOM, si putem lua innerHTML-ul lui
-            html={content}//inner html
+            html={content} //inner html
             onBlur={setNewContentNotita}
             onKeyDown={handleKeyDown}
             tagName="div"             //ContentEditable va fi sub forma de div

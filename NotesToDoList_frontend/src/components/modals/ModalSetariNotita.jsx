@@ -51,8 +51,8 @@ const ModalSetariNotita = ( {show, close, updateFlag, setUpdateFlag, notitaCuren
         setCuloareText(target.value)
     }
 
-    //Content pentru Modalul Stergere Notita
-    const ContentModalStergereNotita = (
+    //Content pentru Modal
+    const ContentModalSetari = (
 
         <Box
             sx={{ display: 'flex', flexDirection: 'column', bgcolor: "#282424", color: "white", justifyContent: "center", alignItems: "center",
@@ -96,10 +96,10 @@ const ModalSetariNotita = ( {show, close, updateFlag, setUpdateFlag, notitaCuren
         <>
             {
                 <Modal 
-                    aria-labelledby="modal-stergere-notita" 
+                    aria-labelledby="modal-setari-notita" 
                     open = {show}
                 >
-                    {ContentModalStergereNotita}
+                    {ContentModalSetari}
                 </Modal>
             }
         </>

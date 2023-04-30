@@ -15,6 +15,10 @@ class NotiteService {
     return axios.get('http://localhost:8080/notite/arhivate')
   }
 
+  async getNotiteCautare(text){
+    return axios.get('http://localhost:8080/notite/cautare/' + text)
+  }
+
   //~~~~~~~ PUT REQUESTS ~~~~~~~
   async updateNotita(notita){
     axios.put(`http://localhost:8080/notite`, notita)  
