@@ -40,10 +40,6 @@ const [notitaCurenta, setNotitaCurenta] = useState(null)
 const [selectedRow, setSelectedRow] = useState(null)
 //pentru cautare
 const [searchTitlu, setSearchTitlu] = useState('')
-//pentru culoare
-const [culoareTitlu, setCuloareTitlu] = useState('#FFFFFF')
-const [culoareText, setCuloareText] = useState('#FFFFFF')
-
 
 //hook React
 //prima oara ruleaza cand se monteaza componenta (cand se instantiaza componenta si se insereaza in DOM - Document Object Model) 
@@ -143,8 +139,6 @@ const handleRowClick = (index) => {
     setNotitaCurenta(listaNotite[index])
     setContent(listaNotite[index].textNotita) //setare content prima oara
     setContentTitlu(listaNotite[index].titlu)
-    setCuloareTitlu(listaNotite[index].culoareTitlu)
-    setCuloareText(listaNotite[index].culoareText)
     setSelectedRow(index) //setare variabila de stare cu valoarea indexului, pt a schimba bordura liniei de tabel selectate
 }
 
@@ -260,8 +254,6 @@ return (
                     notitaService={notitaService}
                     notitaCurenta={notitaCurenta}   setNotitaCurenta={setNotitaCurenta}
                     updateFlag={updateFlag}         setUpdateFlag={setUpdateFlag}
-                    culoareTitlu={culoareTitlu}     setCuloareTitlu={setContentTitlu}
-                    culoareText={culoareText}       setCuloareText={setCuloareText}
                 />
 
                 <ModalCautare

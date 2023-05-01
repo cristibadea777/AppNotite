@@ -1,8 +1,9 @@
 import React from 'react'
 import { Modal, Button } from "@mui/material"
 import { Box } from "@mui/system"
+import { useState } from 'react'
 
-const ModalSetariNotita = ( {show, close, updateFlag, setUpdateFlag, notitaCurenta, setNotitaCurenta, notitaService, culoareTitlu, setCuloareTitlu, culoareText, setCuloareText} ) => {
+const ModalSetariNotita = ( {show, close, updateFlag, setUpdateFlag, notitaCurenta, setNotitaCurenta, notitaService} ) => {
 
 
     //functie pentru update notita 
@@ -36,6 +37,10 @@ const ModalSetariNotita = ( {show, close, updateFlag, setUpdateFlag, notitaCuren
         })
 
     }
+
+
+    const [culoareTitlu, setCuloareTitlu] = useState('#FFFFFF')
+    const [culoareText, setCuloareText] = useState('#FFFFFF')
 
 
     const handleChangeInputCuloareTitlu = ({target}) => {
