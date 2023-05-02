@@ -32,7 +32,7 @@ const [createFlag, setCreateFlag] = useState(false)
 const [archiveFlag, setArchiveFlag] = useState(false)
 
 //content ce se transmite catre ModalEditareNotita - initial va fi textul notitei curente, pe care s-a facut click, stabilit in handleRowClick
-const [content, setContent] = useState(null) 
+const [content, setContent] = useState('') 
 const [contentTitlu, setContentTitlu] = useState(null) 
 //notita curenta (cu ea lucram pt afisare text notita, PUT, DELETE, etc)
 const [notitaCurenta, setNotitaCurenta] = useState(null)

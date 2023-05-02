@@ -70,12 +70,28 @@ const ModalSetariNotita = ( {show, close, updateFlag, setUpdateFlag, notitaCuren
                 
                 <div style={{display:'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <h2>Culoate Titlu: </h2>
-                    <input type="color" value={culoareTitlu} onChange={handleChangeInputCuloareTitlu} style={{marginLeft: '15%', width: '25vh'}}/>
+                    {
+                        ! notitaCurenta ? (
+                            <>
+                            <input type="color" value={culoareTitlu} onChange={handleChangeInputCuloareTitlu} style={{marginLeft: '15%', width: '25vh'}}/>
+                            </>
+                        ) : (
+                            <input type="color" defaultValue={notitaCurenta.culoareTitlu} onChange={handleChangeInputCuloareTitlu} style={{marginLeft: '15%', width: '25vh'}}/>
+                        )
+                    }
                 </div>
 
                 <div style={{display:'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <h2>Culoate Text: </h2>
-                    <input type="color" value={culoareText} onChange={handleChangeInputCuloareText} style={{marginLeft: '15%', width: '25vh'}}/>
+                    {
+                        ! notitaCurenta ? (
+                            <>
+                            <input type="color" value={culoareText} onChange={handleChangeInputCuloareText} style={{marginLeft: '15%', width: '25vh'}}/>
+                            </>
+                        ) : (
+                            <input type="color" defaultValue={notitaCurenta.culoareText} onChange={handleChangeInputCuloareText} style={{marginLeft: '15%', width: '25vh'}}/>
+                        )
+                    }
                 </div>
                                 
             </Box>

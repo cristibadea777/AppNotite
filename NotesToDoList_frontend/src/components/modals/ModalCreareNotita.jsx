@@ -11,13 +11,14 @@ import TitluEditabilNotita     from '../TitluEditabilNotita.jsx'
 
 const ModalCreareNotita = ( {show, close, notitaService, createFlag, setCreateFlag} ) => {
 
-    const [content, setContent] = useState("") 
-    const [contentTitlu, setContentTitlu] = useState("") 
+    const [contentTitlu, setContentTitlu] = useState('Titlu...') 
+    const [content, setContent] = useState('Text...') 
 
     const handleCloseModal = () => {
-        //golire text si titlu din modal creare
-        setContent(null)
-        setContentTitlu(null)
+        //golire text si titlu din modal creare 
+        //--- daca se seteaza cu null in loc de ceva text sau text gol, o sa dea warning cum ca prop-ul html din TitluEditabil si CampEditabil sunt nulle
+        setContentTitlu('Titlu...')
+        setContent('Text...')
         
         close()  
     }
@@ -32,7 +33,9 @@ const ModalCreareNotita = ( {show, close, notitaService, createFlag, setCreateFl
             titlu:          contentTitlu,     
             dataScriere:    moment().format("DD-MM-YYYY"),
             dataModificare: moment().format("DD-MM-YYYY"),
-            stare:          '' 
+            stare:          '', 
+            culoareTitlu:   '#FFFFFF',
+            culoareText:    '#FFFFFF'
         }
         //creare notita 
         notitaService.createNotita(notitaNoua)
@@ -40,8 +43,8 @@ const ModalCreareNotita = ( {show, close, notitaService, createFlag, setCreateFl
             //Pornire hook useEffect ce este legat de variabila de stare -- pt update lista notite (altfel trebuie sa dam F5 paginii)
             setCreateFlag(!createFlag)
             //golire text si titlu din modal creare
-            setContent(null)
-            setContentTitlu(null)
+            setContentTitlu('Titlu...')
+            setContent('Text...')
             close() //inchidere modal, din true cand e deschid in false cu functia de toggle din TabelNotite ce inverseaza valoarea
         })
         .catch(error => {
