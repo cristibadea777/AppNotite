@@ -22,7 +22,9 @@ import lombok.extern.log4j.Log4j2;
 
 @RestController
 @RequestMapping("/notite")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000") //http://localhost:3000
+//portul 3000 (cel pe care porneste aplicatia in mod normal) si portul 80 pe care va rula aplicatia (setare in docker compose)
+
 @Log4j2
 @SuppressWarnings("unchecked")
 public class NotiteController {
