@@ -41,19 +41,35 @@ const [selectedRow, setSelectedRow] = useState(null)
 //pentru cautare
 const [searchTitlu, setSearchTitlu] = useState('')
 
+useEffect( () => 
+    {
+        notitaService.getNotite()
+        .then(response => {
+            setListaNotite(response.data)
+            console.log("Refresh din useEffect[]")
+        })
+        .catch(error => {
+            console.error(error)
+        })
+    }, [] //doar la mount
+)
+
 //hook React
 //prima oara ruleaza cand se monteaza componenta (cand se instantiaza componenta si se insereaza in DOM - Document Object Model) 
 //prima oara, useEffect ruleaza indiferent de starea updateFlag
 //apoi, de fiecare data cand updateFlag isi schimba valoarea din false in true, se porneste hook-ul
 useEffect(() => 
     {
-        notitaService.getNotite()
-        .then(response => {
-            setListaNotite(response.data)
-        })
-        .catch(error => {
-            console.error(error)
-        })
+        if(updateFlag){
+            notitaService.getNotite()
+            .then(response => {
+                setListaNotite(response.data)
+                console.log("Refresh din useEffect[updateFlag]")
+            })
+            .catch(error => {
+                console.error(error)
+            })
+        }
 
     }, [updateFlag]
 )
@@ -64,23 +80,27 @@ useEffect(() =>
 //dar cand se creaza o notita noua, trebuie sa se seteze notita curenta cu ultima notita (ultima = cea creata)
 useEffect(() => 
     {
-        notitaService.getNotite()
-        .then(response => {
-            //refresh lista notite
-            setListaNotite(response.data) 
-            //setare notita curenta si content initial 
-            //setam starea aici si nu in modal in .then dupa ce se creaza notita, pt ca setarea starii cu setState este asincrona iar 
-            //modificarile starii nu vor avea efect imediat, este o "promisiune"
-            //de asta se seteaza in useEffect 
-            const index = response.data.length - 1
-            setNotitaCurenta(response.data[index])
-            setContent      (response.data[index].textNotita) 
-            setContentTitlu (response.data[index].titlu)
-            setSelectedRow  (index) 
-        })
-        .catch(error => {
-            console.error(error)
-        })
+        if(createFlag){
+            notitaService.getNotite()
+            .then(response => {
+                //refresh lista notite
+                setListaNotite(response.data) 
+                //setare notita curenta si content initial 
+                //setam starea aici si nu in modal in .then dupa ce se creaza notita, pt ca setarea starii cu setState este asincrona iar 
+                //modificarile starii nu vor avea efect imediat, este o "promisiune"
+                //de asta se seteaza in useEffect 
+                const index = response.data.length - 1
+                setNotitaCurenta(response.data[index])
+                setContent      (response.data[index].textNotita) 
+                setContentTitlu (response.data[index].titlu)
+                setSelectedRow  (index) 
+                console.log("Refresh din useEffect[createFlag]")
+                setCreateFlag(! createFlag)
+            })
+            .catch(error => {
+                console.error(error)
+            })
+        }
 
     }, [createFlag]
 )
@@ -89,22 +109,25 @@ useEffect(() =>
 //notitaCurenta se sterge sau arhiveaza, nu se seteaza alta in locul ei, userul trebuie sa aleaga alta pt a se seta
 useEffect(() => 
     {
-        notitaService[optiuneNotiteArhivate ? 'getNotiteArhivate' : 'getNotite']()
-        .then(response => {
-            //refresh lista notite
-            setListaNotite(response.data) 
-            //stergere content si notitaCurenta, daca s-a facut o stergere (useEffect la startup se cheama indiferent daca deleteFlag e false)
-            if(deleteFlag || archiveFlag){
-                setNotitaCurenta(null)
-                setContent      (null) 
-                setContentTitlu (null)   
-            }
-            if(deleteFlag) { setDeleteFlag (! deleteFlag)  }
-            if(archiveFlag){ setArchiveFlag(! archiveFlag) }
-        })
-        .catch(error => {
-            console.error(error)
-        })
+        if(deleteFlag || archiveFlag || optiuneNotiteArhivate){
+            notitaService[optiuneNotiteArhivate ? 'getNotiteArhivate' : 'getNotite']()
+            .then(response => {
+                //refresh lista notite
+                setListaNotite(response.data) 
+                //stergere content si notitaCurenta, daca s-a facut o stergere (useEffect la startup se cheama indiferent daca deleteFlag e false)
+                if(deleteFlag || archiveFlag){
+                    setNotitaCurenta(null)
+                    setContent      (null) 
+                    setContentTitlu (null)   
+                }
+                if(deleteFlag) { setDeleteFlag (! deleteFlag)  }
+                if(archiveFlag){ setArchiveFlag(! archiveFlag) }
+                console.log("Refresh din useEffect[deleteFlag, archiveFlag, optiuneNotiteArhivate]")
+            })
+            .catch(error => {
+                console.error(error)
+            })
+        }
 
     }, [deleteFlag, archiveFlag, optiuneNotiteArhivate]
 )
@@ -119,12 +142,14 @@ useEffect( () =>
         .then(response => {
             setListaNotite(response.data)
             if(response.data){
+                console.log(response.data.length)
                 //const index = response.data.length - 1
                 const index = 0
                 setNotitaCurenta(response.data[index])
                 setContent      (response.data[index].textNotita) 
                 setContentTitlu (response.data[index].titlu)
                 setSelectedRow  (index) 
+                console.log("Refresh din useEffect[optiuneNotiteArhivate]")
             }
         })
         .catch(error => console.error(error))

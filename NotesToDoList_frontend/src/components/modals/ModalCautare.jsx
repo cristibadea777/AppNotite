@@ -13,15 +13,15 @@ const ModalCautare = ( {show, close, notitaService, searchTitlu, setSearchTitlu,
         notitaService[searchTitlu ? 'getNotiteCautare' : 'getNotite'](searchTitlu)
         .then(response => {
             setListaNotite(response.data)
-            if(response.data){
+            if(! response.data.length === 0 ){
                 //const index = response.data.length - 1
                 const index = 0
                 setNotitaCurenta(response.data[index])
                 setContent      (response.data[index].textNotita) 
                 setContentTitlu (response.data[index].titlu)
                 setSelectedRow  (index) 
-                setSearchTitlu('')
             }
+            setSearchTitlu('')
             close()
         })
         .catch(error => {
@@ -33,15 +33,15 @@ const ModalCautare = ( {show, close, notitaService, searchTitlu, setSearchTitlu,
         notitaService[searchTitlu ? 'getNotiteCautareArhivate' : 'getNotiteArhivate'](searchTitlu)
         .then(response => {
             setListaNotite(response.data)
-            if(response.data){
+            if(! response.data.length === 0 ){
                 //const index = response.data.length - 1
                 const index = 0
                 setNotitaCurenta(response.data[index])
                 setContent      (response.data[index].textNotita) 
                 setContentTitlu (response.data[index].titlu)
                 setSelectedRow  (index) 
-                setSearchTitlu('')
             }
+            setSearchTitlu('')
             close()
         })
         .catch(error => {

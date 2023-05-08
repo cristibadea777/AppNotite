@@ -1,5 +1,11 @@
 import axios from 'axios'
 
+const proxy = 'http://localhost:8080'
+//const proxy = 'http://localhost:8080'
+
+axios.defaults.headers.common['ngrok-skip-browser-warning'] = "any value";
+//pt ngrok. pagina de pornire in cazul free-tier cauza o eroare cors
+
 class NotiteService {
 
   state = {
@@ -8,40 +14,39 @@ class NotiteService {
 
   //~~~~~~~ GET REQUESTS ~~~~~~~ 
   async getNotite() {
-    return axios.get(`http://localhost:8080/notite`)
+    return axios.get(proxy + '/notite')
   }
 
   async getNotiteArhivate(){
-    return axios.get('http://localhost:8080/notite/arhivate')
+    return axios.get(proxy + '/notite/arhivate')
   }
 
   async getNotiteCautare(text){
-    return axios.get('http://localhost:8080/notite/cautare/' + text)
+    return axios.get(proxy + '/notite/cautare/' + text)
   }
 
   async getNotiteCautareArhivate(text){
-    return axios.get('http://localhost:8080/notite/cautare/arhivate/' + text)
+    return axios.get(proxy + '/notite/cautare/arhivate/' + text)
   }
 
   //~~~~~~~ PUT REQUESTS ~~~~~~~
   async updateNotita(notita){
-    axios.put(`http://localhost:8080/notite`, notita)  
+    axios.put(proxy + '/notite', notita)  
   }
 
   async arhivareNotita(notita){
-    axios.put('http://localhost:8080/notite/arhivare', notita)  
+    axios.put(proxy + '/notite/arhivare', notita)  
   }
 
    //~~~~~~~ POST REQUESTS ~~~~~~~
   async createNotita(notita){
-    axios.post(`http://localhost:8080/notite`, notita)  
+    axios.post(proxy + '/notite', notita)  
   }
 
   //~~~~~~~ DELETE REQUESTS ~~~~~~~
   async deleteNotita(notita){
-    axios.delete('http://localhost:8080/notite', { data: notita })
+    axios.delete(proxy + '/notite', { data: notita })
   }
-
 
 }
 

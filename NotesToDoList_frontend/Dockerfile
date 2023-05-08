@@ -9,11 +9,12 @@ RUN npm install
 COPY . .
 #build
 RUN npm run build
-#comanda de start aplicatie
+
 ENTRYPOINT npm start
 
+
 #docker build -t frontend-notestodo .   
+
+#in git bash cu winpty la inceput
 #docker run -it -p 3000:3000 frontend-notestodo sh
-#sau in git bash
-#winpty docker run -it -p 3000:3000 frontend-notestodo sh
-#apoi npm start
+#npm start
