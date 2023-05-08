@@ -46,7 +46,6 @@ useEffect( () =>
         notitaService.getNotite()
         .then(response => {
             setListaNotite(response.data)
-            console.log("Refresh din useEffect[]")
         })
         .catch(error => {
             console.error(error)
@@ -64,7 +63,6 @@ useEffect(() =>
             notitaService.getNotite()
             .then(response => {
                 setListaNotite(response.data)
-                console.log("Refresh din useEffect[updateFlag]")
             })
             .catch(error => {
                 console.error(error)
@@ -94,7 +92,6 @@ useEffect(() =>
                 setContent      (response.data[index].textNotita) 
                 setContentTitlu (response.data[index].titlu)
                 setSelectedRow  (index) 
-                console.log("Refresh din useEffect[createFlag]")
                 setCreateFlag(! createFlag)
             })
             .catch(error => {
@@ -122,7 +119,6 @@ useEffect(() =>
                 }
                 if(deleteFlag) { setDeleteFlag (! deleteFlag)  }
                 if(archiveFlag){ setArchiveFlag(! archiveFlag) }
-                console.log("Refresh din useEffect[deleteFlag, archiveFlag, optiuneNotiteArhivate]")
             })
             .catch(error => {
                 console.error(error)
@@ -141,15 +137,13 @@ useEffect( () =>
         notitaService[optiuneNotiteArhivate ? 'getNotiteArhivate' : 'getNotite']()
         .then(response => {
             setListaNotite(response.data)
-            if(response.data){
-                console.log(response.data.length)
+            if(! response.data.length === 0){
                 //const index = response.data.length - 1
                 const index = 0
                 setNotitaCurenta(response.data[index])
                 setContent      (response.data[index].textNotita) 
                 setContentTitlu (response.data[index].titlu)
                 setSelectedRow  (index) 
-                console.log("Refresh din useEffect[optiuneNotiteArhivate]")
             }
         })
         .catch(error => console.error(error))
