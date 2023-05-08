@@ -47,21 +47,27 @@ const [searchTitlu, setSearchTitlu] = useState('')
 //apoi, de fiecare data cand updateFlag isi schimba valoarea din false in true, se porneste hook-ul
 useEffect(() => 
     {
+        notitaService.getNotite()
+        .then(response => {
+            //refresh lista notite
+            setListaNotite(response.data) 
+        })
+        .catch(error => {
+            console.error(error)
+        })
+
         if(updateFlag){
             notitaService.getNotite()
             .then(response => {
                 setListaNotite(response.data)
                 setUpdateFlag(! updateFlag)
-                setNotitaCurenta(notitaCurenta)
-                setContent      (notitaCurenta.textNotita) 
-                setContentTitlu (notitaCurenta.titlu)
             })
             .catch(error => {
                 console.error(error)
             })
         }
 
-    }, [updateFlag, notitaCurenta]
+    }, [updateFlag]
 )
 
 //useEffect pt createFlag si deleteFlaf. dupa ce se creaza notita, se da refresh listei, SI notita curenta se va seta cu ultima notita din lista (cea creata)
@@ -70,6 +76,15 @@ useEffect(() =>
 //dar cand se creaza o notita noua, trebuie sa se seteze notita curenta cu ultima notita (ultima = cea creata)
 useEffect(() => 
     {
+        notitaService.getNotite()
+        .then(response => {
+            //refresh lista notite
+            setListaNotite(response.data) 
+        })
+        .catch(error => {
+            console.error(error)
+        })
+
         if(createFlag){
             notitaService.getNotite()
             .then(response => {
@@ -98,7 +113,16 @@ useEffect(() =>
 //notitaCurenta se sterge sau arhiveaza, nu se seteaza alta in locul ei, userul trebuie sa aleaga alta pt a se seta
 useEffect(() => 
     {
-        if(deleteFlag || archiveFlag || optiuneNotiteArhivate){
+        notitaService[optiuneNotiteArhivate ? 'getNotiteArhivate' : 'getNotite']()
+        .then(response => {
+            //refresh lista notite
+            setListaNotite(response.data) 
+        })
+        .catch(error => {
+            console.error(error)
+        })
+
+        if(deleteFlag || archiveFlag){
             notitaService[optiuneNotiteArhivate ? 'getNotiteArhivate' : 'getNotite']()
             .then(response => {
                 //refresh lista notite
