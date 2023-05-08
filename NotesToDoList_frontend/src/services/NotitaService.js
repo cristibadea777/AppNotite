@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const proxy = 'http://localhost:8080'
+const proxy = 'https://7755-5-14-136-28.ngrok-free.app'
 //const proxy = 'http://localhost:8080'
 
 axios.defaults.headers.common['ngrok-skip-browser-warning'] = "any value";

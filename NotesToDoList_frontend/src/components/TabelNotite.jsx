@@ -41,18 +41,6 @@ const [selectedRow, setSelectedRow] = useState(null)
 //pentru cautare
 const [searchTitlu, setSearchTitlu] = useState('')
 
-useEffect( () => 
-    {
-        notitaService.getNotite()
-        .then(response => {
-            setListaNotite(response.data)
-        })
-        .catch(error => {
-            console.error(error)
-        })
-    }, [] //doar la mount
-)
-
 //hook React
 //prima oara ruleaza cand se monteaza componenta (cand se instantiaza componenta si se insereaza in DOM - Document Object Model) 
 //prima oara, useEffect ruleaza indiferent de starea updateFlag
@@ -63,13 +51,17 @@ useEffect(() =>
             notitaService.getNotite()
             .then(response => {
                 setListaNotite(response.data)
+                setUpdateFlag(! updateFlag)
+                setNotitaCurenta(notitaCurenta)
+                setContent      (notitaCurenta.textNotita) 
+                setContentTitlu (notitaCurenta.titlu)
             })
             .catch(error => {
                 console.error(error)
             })
         }
 
-    }, [updateFlag]
+    }, [updateFlag, notitaCurenta]
 )
 
 //useEffect pt createFlag si deleteFlaf. dupa ce se creaza notita, se da refresh listei, SI notita curenta se va seta cu ultima notita din lista (cea creata)
@@ -92,11 +84,11 @@ useEffect(() =>
                 setContent      (response.data[index].textNotita) 
                 setContentTitlu (response.data[index].titlu)
                 setSelectedRow  (index) 
-                setCreateFlag(! createFlag)
             })
             .catch(error => {
                 console.error(error)
             })
+            setCreateFlag(! createFlag)
         }
 
     }, [createFlag]
